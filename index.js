@@ -163,7 +163,7 @@ function detenerLoop()
 //sameTime({p:1,i:3,d:4},{p:2,i:1,d:2},{p:3,i:2,d:2})
 //sameTime({pin:1,on:3,off:4},{pin:2,on:1,off:2},{pin:3,on:2,off:2})
 //sameTime({pin:1,off:3,on:4},{pin:2,off:1,on:2},{pin:3,off:2,on:2})
-sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
+// sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
 
 
 function sameTime(...PinesData)
@@ -175,6 +175,18 @@ function sameTime(...PinesData)
         console.log(PinesData[i].pin);
         console.log(PinesData[i].start);
         console.log(PinesData[i].lapse);
+        let pinId = PinesData[i].pin;
+        pines[pinId].low();
+        setTimeout(() =>{
+            pines[pinId].high();
+            console.log("pinId : ",pinId,' high');
+            setTimeout(() =>{
+                pines[pinId].low();
+                console.log("pinId : ",pinId,' low');
+            },
+            PinesData[i].lapse*1000)
+
+        },PinesData[i].start*1000)
 
     }
     
