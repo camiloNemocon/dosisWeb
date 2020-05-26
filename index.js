@@ -37,9 +37,17 @@ io.on('connection', function(socket)
     io.emit('chat message', msg);
     console.log("msg: ",msg);
 
-       eval(msg);
-
-      });
+    try
+    {
+         eval(msg);
+    }
+    catch (e)
+    {
+         io.emit('eval error', e);
+        console.log("eval error: ",e); 
+    }
+      
+ });
 });
 
 board.on('ready', function () 
@@ -150,6 +158,29 @@ function detenerLoop()
 {
     clearInterval(loopID);
 }
+
+//sameTime([1,3,4],[2,1,4],[2,4,5])
+//sameTime({p:1,i:3,d:4},{p:2,i:1,d:2},{p:3,i:2,d:2})
+//sameTime({pin:1,on:3,off:4},{pin:2,on:1,off:2},{pin:3,on:2,off:2})
+//sameTime({pin:1,off:3,on:4},{pin:2,off:1,on:2},{pin:3,off:2,on:2})
+sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
+
+
+function sameTime(...PinesData)
+{
+    //console.log("PinesData : ",PinesData);
+
+    for (var i = 0; i < PinesData.length; i++) 
+    {
+        console.log(PinesData[i].pin);
+        console.log(PinesData[i].start);
+        console.log(PinesData[i].lapse);
+
+    }
+    
+}
+
+
 
 
 
