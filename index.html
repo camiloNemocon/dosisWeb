@@ -25,8 +25,21 @@
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+    let APP_NAME = "com.maqpattrrrrxnxs.dosisweb";
     var socket;
       $(function () {
+        let string_guardada = localStorage.getItem(APP_NAME)
+        console.log("string_guardada : ",string_guardada);
+        let objeto_guardado;
+        if(string_guardada){
+          objeto_guardado = JSON.parse(string_guardada)
+          console.log("objeto_guardado : ",objeto_guardado);
+          if(objeto_guardado.codigo){
+            // document.getElementById("code").value=objeto_guardado.codigo;
+            editor.doc.setValue(objeto_guardado.codigo)
+            console.log("editor : ",editor);
+          }
+        }
         socket = io();
         $('form').submit(function(){
           socket.emit('chat message', $('#m').val());
@@ -42,6 +55,7 @@
 
 
     <script>
+    let codigo='';
 
 var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         
@@ -68,8 +82,15 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
           "Alt-Enter": function(cm) 
           {  
             //cm.getLine(cm.getCursor().line); 
-            linea=cm.getLine(cm.getCursor().line);                        
-            socket.emit('chat message',linea); 
+            linea=cm.getLine(cm.getCursor().line);
+            console.log("cm : ",cm);
+            let codigoUltimo = cm.doc.getValue();
+            // let codigoUltimo = cm.getValue();
+            console.log("codigoUltimo : ",codigoUltimo);
+            let string_para_guardar = JSON.stringify({codigo:codigoUltimo})
+            localStorage.setItem(APP_NAME,string_para_guardar)
+            // lineas.push(linea);                        
+            // socket.emit('chat message',linea); 
             console.log(linea); 
           },
           "F7": function(cm) {  cm.getValue(); console.log(cm.getValue());},
