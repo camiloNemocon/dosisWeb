@@ -72,6 +72,15 @@ function prender(...pinesID) {
     }
 }
 
+function apagarTodo()
+{
+    for (let i = 0; i < 13; i++)
+    {
+        var pin = pines[i];
+        pin.low();
+    }
+}
+
 function apagar(...pinesID) 
 {
     console.log("pines : ",pinesID);
@@ -176,6 +185,7 @@ function sameTime(...PinesData)
         console.log(PinesData[i].start);
         console.log(PinesData[i].lapse);
         let pinId = PinesData[i].pin;
+        let duration = PinesData[i].lapse*1000;
         pines[pinId].low();
         setTimeout(() =>{
             pines[pinId].high();
@@ -184,7 +194,7 @@ function sameTime(...PinesData)
                 pines[pinId].low();
                 console.log("pinId : ",pinId,' low');
             },
-            PinesData[i].lapse*1000)
+            duration)
 
         },PinesData[i].start*1000)
 

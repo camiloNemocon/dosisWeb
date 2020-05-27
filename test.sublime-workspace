@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"pin",
+				"pin"
+			],
+			[
 				"pine",
 				"pinesID"
 			]
@@ -16,16 +20,16 @@
 			"settings":
 			{
 				"buffer_size": 2630,
-				"line_ending": "Unix"
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "index.js",
 			"settings":
 			{
-				"buffer_size": 2630,
+				"buffer_size": 3338,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -61,10 +65,13 @@
 	},
 	"expanded_folders":
 	[
-		"/C/Users/canfc/Desktop/dosisWeb/test4"
+		"/C/Users/canfc/Desktop/dosisWeb/DosisWebTest"
 	],
 	"file_history":
 	[
+		"/C/Users/canfc/Desktop/dosisWeb/DosisWebTest/index.html",
+		"/C/Users/canfc/Desktop/dosisWeb/DosisWebTest/index.js",
+		"/C/Users/canfc/Desktop/dosisWeb/DosisWebTest/package.json",
 		"/C/Users/canfc/AppData/Roaming/Sublime Text 3/Packages/User/console_log.sublime-macro",
 		"/C/Users/canfc/Desktop/dosisWeb/test3/index.js",
 		"/C/Users/canfc/Desktop/dosisWeb/test3/app.json"
@@ -118,8 +125,8 @@
 						"selection":
 						[
 							[
-								2021,
-								2033
+								0,
+								0
 							]
 						],
 						"settings":
@@ -129,7 +136,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 923.0,
+						"translation.y": 857.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -141,15 +148,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2630,
+						"buffer_size": 3338,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2517,
-								2517
+								2639,
+								2639
 							]
 						],
 						"settings":
@@ -159,7 +166,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2170.0,
+						"translation.y": 3337.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -244,8 +251,8 @@
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
-	"side_bar_width": 150.0,
+	"side_bar_visible": false,
+	"side_bar_width": 315.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
