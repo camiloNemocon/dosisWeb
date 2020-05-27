@@ -59,8 +59,6 @@ board.on('ready', function ()
     pin.low();
   }
   console.log("start!!!");
-    // sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
-    sameTime({pin:1,start:0.5,lapse:1});
     
 });
 
@@ -177,10 +175,7 @@ function detenerLoop()
     clearInterval(loopID);
 }
 
-//sameTime([1,3,4],[2,1,4],[2,4,5])
-//sameTime({p:1,i:3,d:4},{p:2,i:1,d:2},{p:3,i:2,d:2})
-//sameTime({pin:1,on:3,off:4},{pin:2,on:1,off:2},{pin:3,on:2,off:2})
-//sameTime({pin:1,off:3,on:4},{pin:2,off:1,on:2},{pin:3,off:2,on:2})
+
 // sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
 // {pin:1,start:3,lapse:4,init_id:6234,stop_id:453647,id:ciclo:function(){}}
 var pinesSameTime ;
@@ -193,11 +188,11 @@ function sameTime(...PinesData)
         PinesData[i].id = i;
         PinesData[i].ciclo = function(){
             this.init_id = setTimeout(() =>{
-                console.log('start');
-                // pines[this.pin].high();
+                //console.log('start');
+                 pines[this.pin].high();
                 this.stop_id = setTimeout(() =>{
-                    console.log('stop');
-                    // pines[this.pin].low();
+                  //  console.log('stop');
+                     pines[this.pin].low();
                     pinesSameTime[this.id].ciclo();
                 },
                 this.lapse*1000)
