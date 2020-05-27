@@ -59,6 +59,8 @@ board.on('ready', function ()
     pin.low();
   }
   console.log("start!!!");
+    // sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
+    sameTime({pin:1,start:0.5,lapse:1});
     
 });
 
@@ -79,6 +81,13 @@ function apagarTodo()
         var pin = pines[i];
         pin.low();
     }
+    if(pinesSameTime){
+        pinesSameTime.forEach(function(pin_object){
+            clearTimeout(pin_object.init_id)
+            clearTimeout(pin_object.stop_id)
+        })
+    }
+
 }
 
 function apagar(...pinesID) 
@@ -173,30 +182,28 @@ function detenerLoop()
 //sameTime({pin:1,on:3,off:4},{pin:2,on:1,off:2},{pin:3,on:2,off:2})
 //sameTime({pin:1,off:3,on:4},{pin:2,off:1,on:2},{pin:3,off:2,on:2})
 // sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
-
-
+// {pin:1,start:3,lapse:4,init_id:6234,stop_id:453647,id:ciclo:function(){}}
+var pinesSameTime ;
 function sameTime(...PinesData)
 {
     //console.log("PinesData : ",PinesData);
-
+    pinesSameTime=PinesData;
     for (var i = 0; i < PinesData.length; i++) 
     {
-        console.log(PinesData[i].pin);
-        console.log(PinesData[i].start);
-        console.log(PinesData[i].lapse);
-        let pinId = PinesData[i].pin;
-        let duration = PinesData[i].lapse*1000;
-        pines[pinId].low();
-        setTimeout(() =>{
-            pines[pinId].high();
-            console.log("pinId : ",pinId,' high');
-            setTimeout(() =>{
-                pines[pinId].low();
-                console.log("pinId : ",pinId,' low');
-            },
-            duration)
-
-        },PinesData[i].start*1000)
+        PinesData[i].id = i;
+        PinesData[i].ciclo = function(){
+            this.init_id = setTimeout(() =>{
+                console.log('start');
+                // pines[this.pin].high();
+                this.stop_id = setTimeout(() =>{
+                    console.log('stop');
+                    // pines[this.pin].low();
+                    pinesSameTime[this.id].ciclo();
+                },
+                this.lapse*1000)
+            },this.start*1000)
+        }
+        PinesData[i].ciclo();
 
     }
     
