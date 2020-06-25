@@ -2,106 +2,41 @@
 <html>
   <head>
   <link rel="stylesheet" href="./lib/codemirror.css">
+  <!-- <link rel="stylesheet" href="./css/tomorrow-night-eighties.css"> -->
 <script src="./lib/codemirror.js"></script>
     <title>Socket.IO chat</title>
-  <style> /*
+  <style> 
+      body { 
+        background-color: #222;
+        color: #aaa;
+      }
+  /*
      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
+   */ 
+      #messages { list-style-type: none; margin: 0; padding: 0; font-family: monospace;color:green;}
       #messages li { padding: 5px 10px; }
+      #messages li:nth-child(1) { color: red; }
       #messages li:nth-child(odd) { background: #eee; }
       #messages { margin-bottom: 40px }
-   */ </style>
+      /*.CodeMirror {        background-color: transparent;        color: #aaa;*/
+      }
+  </style>
   </head>
   <body>
   <textarea id="code" name="code"> </textarea>
     <ul id="messages"></ul>
-    <form action="">
+    <!-- <form action=""> 
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
+    -->
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-    let APP_NAME = "com.maqpattrrrrxnxs.dosisweb";
-    var socket;
-      $(function () {
-        let string_guardada = localStorage.getItem(APP_NAME)
-        console.log("string_guardada : ",string_guardada);
-        let objeto_guardado;
-        if(string_guardada){
-          objeto_guardado = JSON.parse(string_guardada)
-          console.log("objeto_guardado : ",objeto_guardado);
-          if(objeto_guardado.codigo){
-            // document.getElementById("code").value=objeto_guardado.codigo;
-            editor.doc.setValue(objeto_guardado.codigo)
-            console.log("editor : ",editor);
-          }
-        }
-        socket = io();
-        $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
-      });
-    </script>
 
 
-    <script>
-    let codigo='';
-
-var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        
-        //auto complete  
-        lineNumbers: true,
-        
-        //active line
-        mode: "application/xml",
-        styleActiveLine: true,
-        lineNumbers: true,
-        lineWrapping: true,
-
-        //cerrar ] ) }
-        autoCloseBrackets: true,
-
-        //fondo
-        lineNumbers: true,
-        theme: "night",
-
-        //comandos de taclado
-        extraKeys:
-        {
-          "Ctrl-Space": "autocomplete",
-          "Alt-Enter": function(cm) 
-          {  
-            //cm.getLine(cm.getCursor().line); 
-            linea=cm.getLine(cm.getCursor().line);
-            console.log("cm : ",cm);
-            let codigoUltimo = cm.doc.getValue();
-            // let codigoUltimo = cm.getValue();
-            console.log("codigoUltimo : ",codigoUltimo);
-            let string_para_guardar = JSON.stringify({codigo:codigoUltimo})
-            localStorage.setItem(APP_NAME,string_para_guardar)
-            // lineas.push(linea);                        
-            // socket.emit('chat message',linea); 
-            console.log(linea); 
-          },
-          "F7": function(cm) {  cm.getValue(); console.log(cm.getValue());},
-          "F11": function(cm) { cm.setOption("fullScreen", !cm.getOption("fullScreen")); },
-          "Esc": function(cm) { if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);}
-        }
-
-
-
-      });
-    </script>
+    <script type="text/javascript" src="main.js"></script>
 
 
   </body>
