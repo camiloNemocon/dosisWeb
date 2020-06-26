@@ -3,5 +3,12 @@ node index.js
 en el navegador web: http://localhost:3000/
 
 
+pára instalar las librerias que estan relacionadas en el package se debe:
+npm install
+npm run start
+
+
+
 nodemon index.js 
 reincia automaticamente
+

@@ -5,6 +5,8 @@ class ServoManager  {
     constructor(opts){
     	console.log("opts : ",opts);
         this.fiveServo = new Servo(opts)
+        
+   
         // console.log('servo en pin no. :', pin)
         // thispinValue = opts.pin ;
         // this.range = opts.range
@@ -129,18 +131,29 @@ class PorPasos extends Strategy{
 class BucleConPausa extends Strategy{
     constructor(motor) {
         super(motor)
+
+             this.animation = new five.Animation(this.servoDosis.fiveServo);
     }
 
 	muevase (parametros){
-		var animation = new five.Animation(servo);
+        console.log("parametros : ",parametros);
+
+         
+    	//var animation = new five.Animation(this.servoDosis.fiveServo);
+
 
 		// Create an animation segment object
-		animation.enqueue({
+		this.animation.enqueue({
 			duration: 2000,
-			cuePoints: [0, 1.0],
-			keyFrames: [ {degrees: parametros.start}, {degrees: parametros.final}],
+			cuePoints: [0, 0.3, 0.6, 1.0],
+			keyFrames: [ {degrees: parametros.start}, {degrees: parametros.final},{degrees: parametros.start}, {degrees: parametros.final}],
 			oncomplete:()=>{
 				this
+                setTimeout(()=>{
+                    this.muevase(parametros)
+                },parametros.tiempo*1000);
+                
+                //console.log("animation : ",animation);
 				console.log("this : ",this);
 				let tiempo = parametros.tiempo;
 				console.log("tiempo : ",tiempo);
