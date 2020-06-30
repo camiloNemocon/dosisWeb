@@ -2,7 +2,6 @@
   "name": "DosisWebTest",
   "version": "0.0.1",
   "description": "my first socket.io app",
-  "main": "nw.html",
   "main": "index.js",
   "dependencies": {
     "babylon": "^6.18.0",
@@ -28,7 +27,7 @@
     ]
   },
   "devDependencies": {
-    "watchify": "^3.11.1",
-    "browserify-livereload": "^1.0.10"
+    "browserify-livereload": "^1.0.10",
+    "watchify": "^3.11.1"
   }
 }
