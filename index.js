@@ -83,9 +83,9 @@ io.on('connection', function(socket)
       */
  });
 });
+/*
 let servoMotor;
 let servoContador=0;
-/*
 function servo(config) {
   // console.log("config : ",config);
   let tiempo = config.tiempo*500;
@@ -182,7 +182,7 @@ userCommand = 'servo({pin:10,estado:A, start:0, final:90, tiempo:2})'
 // userCommand = 'servo({pin:10,estado:A, start:0, final:180, tiempo:2})'
 // eval(userCommand);
 // servo({pin:10,estado:0, start:0, final:90, tiempo:2})
-var servos=[];
+var servos={};
 function servo(...config){
     console.log("config : ",config);
     // console.log("desde la funcion servo : ",config[0])
@@ -196,10 +196,9 @@ function servo(...config){
     console.log("estrategia : ",estrategia);
 
     console.log("pin : ",pin);
-    let isAlready = pines_servos.includes(pin)
-    console.log("isAlready : ",isAlready);
+    let servoMotor = servos[pin]
     let range = [start, final]
-    if(!isAlready){
+    if(!servoMotor){
         console.log('se crea el servo por primera vez');
         pines_servos.push(pin)
         servoMotor = new ServoManager({
@@ -209,7 +208,7 @@ function servo(...config){
         });
         // return
         // servoMotor.elegirEstrategia(estrategia);
-        servos.push(servoMotor)
+        servos[pin]=servoMotor
     }else{
         servoMotor.stop();
     }
@@ -219,7 +218,11 @@ function servo(...config){
 
 }
 function apagarServos() {
-  servos.forEach(servo=>servo.stop())
+  var pin;
+  for( pin in servos ) {
+    var servo = servos[pin];
+    servo.stop();
+  }
 }
 if(!is_testing)
 board.on('ready', function () 
@@ -258,7 +261,7 @@ function apagarTodo()
             clearTimeout(pin_object.stop_id)
         })
     }
-
+    apagarServos();
 }
 
 function apagar(...pinesID) 
