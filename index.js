@@ -235,7 +235,7 @@ board.on('ready', function ()
     pin.low();
   }
   console.log("start!!!");
- messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
+ // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
   
 });
 
