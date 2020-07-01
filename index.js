@@ -187,6 +187,7 @@ function servo(...config){
     console.log("config : ",config);
     // console.log("desde la funcion servo : ",config[0])
     let configuracion = config[0]
+    console.log("configuracion : ",configuracion);
     let pin = configuracion.pin;
     let start = configuracion.start;
     let final = configuracion.final;
@@ -213,7 +214,7 @@ function servo(...config){
         servoMotor.stop();
     }
     servoMotor.actualizar({estrategia,range});
-    servoMotor.ejecutarInstruccion({start,final,tiempo,pasos});
+    servoMotor.ejecutarInstruccion(configuracion);
     console.log("pines_servos : ",pines_servos);
 
 }
@@ -234,7 +235,7 @@ board.on('ready', function ()
     pin.low();
   }
   console.log("start!!!");
- // messageManager.parse("servo({pin:10,estado:3, start:10, final:170, tiempo:5, paso:5})")
+ messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
   
 });
 

@@ -31,6 +31,9 @@ class ServoManager  {
 			case 4:
 				this.strategy = new BucleConPausa(this)
 				break
+			case 5:
+				this.strategy = new PorPasosEnBucle(this)
+				break
 			default:
 				this.strategy = new Bucle(this)
 		}
@@ -128,6 +131,33 @@ class PorPasos extends Strategy{
 		this.servoDosis.fiveServo.to(parametros.final,parametros.tiempo*1000, parametros.pasos)
 	}
 }
+class PorPasosEnBucle extends Strategy{
+	constructor(motor) {
+		super(motor)
+		this.flag = true;
+		this.servoDosis.fiveServo.on("move:complete",()=>{
+			this.flag=!this.flag;
+			this.muevase();
+		})
+	}
+
+	muevase (parametros){
+		console.log("parametros :-> ",parametros);
+		if(parametros){
+			console.log('primera vez');
+			this.parametros = parametros;
+		}else{
+			console.log('las otras veces');
+			parametros = this.parametros;
+		}
+		if(this.flag){
+
+			this.servoDosis.fiveServo.to(parametros.final,parametros.tiempo*1000, parametros.pasos);
+		}else{
+			this.servoDosis.fiveServo.to(parametros.start,parametros.tiempo*1000, parametros.pasos)
+		}
+	}
+}
 class BucleConPausa extends Strategy{
 	constructor(motor) {
 		super(motor);
@@ -137,29 +167,18 @@ class BucleConPausa extends Strategy{
 
 	muevase (parametros){
 		console.log("parametros : ",parametros);
-
-		 
-		//var animation = new five.Animation(this.servoDosis.fiveServo);
-
-
-		// Create an animation segment object
-		this.animation.enqueue({
-			duration: 2000,
-			cuePoints: [0, 0.3, 0.6, 1.0],
-			keyFrames: [ {degrees: parametros.start}, {degrees: parametros.final},{degrees: parametros.start}, {degrees: parametros.final}],
-			oncomplete:()=>{
-				if(this.setTimeoutId===-1)return
-				this.setTimeoutId = setTimeout(()=>{
+			this.animation.enqueue({
+				duration: parametros.tiempoMov*1000,
+				cuePoints: [0, 0.3, 0.6, 1.0],
+				keyFrames: [ {degrees: parametros.start}, {degrees: parametros.final},{degrees: parametros.start}, {degrees: parametros.final}],
+				oncomplete:()=>{
 					if(this.setTimeoutId===-1)return
-					this.muevase(parametros)
-				},parametros.tiempo*1000);
-				
-				//console.log("animation : ",animation);
-				// console.log("this : ",this);
-				let tiempo = parametros.tiempo;
-				console.log("tiempo : ",tiempo);
-			}
-		});
+					this.setTimeoutId = setTimeout(()=>{
+						if(this.setTimeoutId===-1)return
+						this.muevase(parametros)
+					},parametros.tiempoPausa*1000);
+				}
+			});
 	}
 	stop(){
 		clearTimeout(this.setTimeoutId);
