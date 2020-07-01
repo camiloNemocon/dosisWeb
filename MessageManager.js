@@ -51,7 +51,7 @@ class MessageManager extends EventEmitter{
 				console.log("object_string : ",object_string);
 				obj_enviar.push(object_string)
 			}
-			console.log("objectReconstruction : ",objectReconstruction);
+			// console.log("objectReconstruction : ",objectReconstruction);
 			this.emit('parsed',msg, name,objectReconstruction)
 			return
 			// console.clear();
