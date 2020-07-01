@@ -39,8 +39,9 @@ class ServoManager  {
 		}
 	}
 	actualizar(opts){
-		this.elegirEstrategia(opts.estrategia);
 		this.fiveServo.range=opts.range;
+		if(this.strategy)this.strategy.reset();
+		this.elegirEstrategia(opts.estrategia);
 	}
 	ejecutarInstruccion (parametros){
 		this.strategy.muevase(parametros)
@@ -83,6 +84,7 @@ class Strategy {
 		console.log('muevase usando five.animation api');
 	}
 	stop(){}
+	reset(){}
 }
 
 class Bucle extends Strategy{
@@ -135,27 +137,32 @@ class PorPasosEnBucle extends Strategy{
 	constructor(motor) {
 		super(motor)
 		this.flag = true;
-		this.servoDosis.fiveServo.on("move:complete",()=>{
-			this.flag=!this.flag;
-			this.muevase();
-		})
+		this.bindedOnMoveComplete = this.onMoveComplete.bind(this)
+		this.servoDosis.fiveServo.on("move:complete",this.bindedOnMoveComplete)
+	}
+	onMoveComplete(){
+		this.flag=!this.flag;
+		this.muevase();
 	}
 
 	muevase (parametros){
-		console.log("parametros :-> ",parametros);
 		if(parametros){
-			console.log('primera vez');
 			this.parametros = parametros;
 		}else{
-			console.log('las otras veces');
 			parametros = this.parametros;
 		}
 		if(this.flag){
-
 			this.servoDosis.fiveServo.to(parametros.final,parametros.tiempo*1000, parametros.pasos);
 		}else{
 			this.servoDosis.fiveServo.to(parametros.start,parametros.tiempo*1000, parametros.pasos)
 		}
+	}
+	stop(){
+		this.servoDosis.fiveServo.removeListener("move:complete",this.bindedOnMoveComplete)
+
+	}
+	reset(){
+		this.stop()
 	}
 }
 class BucleConPausa extends Strategy{

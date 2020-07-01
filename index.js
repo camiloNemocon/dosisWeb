@@ -177,46 +177,36 @@ var E="E"
 var F="F"
 var G="G"
 var pines_servos=[];
-userCommand = 'servo({pin:10,estado:A, start:0, final:90, tiempo:2})'
+// userCommand = 'servo({pin:10,estado:A, start:0, final:90, tiempo:2})'
 // eval(userCommand);
 // userCommand = 'servo({pin:10,estado:A, start:0, final:180, tiempo:2})'
 // eval(userCommand);
 // servo({pin:10,estado:0, start:0, final:90, tiempo:2})
 var servos={};
-function servo(...config){
-    console.log("config : ",config);
-    // console.log("desde la funcion servo : ",config[0])
-    let configuracion = config[0]
+function servo(configuracion){
     console.log("configuracion : ",configuracion);
     let pin = configuracion.pin;
     let start = configuracion.start;
     let final = configuracion.final;
     let tiempo = configuracion.tiempo;
-    let pasos = configuracion.pasos;
     let estrategia = configuracion.estado;
     console.log("estrategia : ",estrategia);
-
     console.log("pin : ",pin);
     let servoMotor = servos[pin]
     let range = [start, final]
     if(!servoMotor){
-        console.log('se crea el servo por primera vez');
         pines_servos.push(pin)
         servoMotor = new ServoManager({
             pin,
             range,
             tiempo
         });
-        // return
-        // servoMotor.elegirEstrategia(estrategia);
         servos[pin]=servoMotor
     }else{
         servoMotor.stop();
     }
     servoMotor.actualizar({estrategia,range});
     servoMotor.ejecutarInstruccion(configuracion);
-    console.log("pines_servos : ",pines_servos);
-
 }
 function apagarServos() {
   var pin;
