@@ -6,6 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 let ServoManager = require('./ServoManager')
+let StepperManager = require('./StepperManager')
 let MessageManager = require('./MessageManager')
 
 // new ServoManager()
@@ -168,7 +169,6 @@ servo({pin:10,estado:0, start:0, final:180,tiempo:4,paso:45})
 servo({pin:10,estado:0, start:0, final:45, tiempo:1, paso:5})
 servo({pin:10,estado:0, start:0, final:45})
 servo({pin:10,estado:1, veces:5,start:0, final:150,tiempo:2})  
-*/
 var A="A"
 var B="B"
 var C="C"
@@ -176,6 +176,7 @@ var D="D"
 var E="E"
 var F="F"
 var G="G"
+*/
 var pines_servos=[];
 // userCommand = 'servo({pin:10,estado:A, start:0, final:90, tiempo:2})'
 // eval(userCommand);
@@ -226,8 +227,36 @@ board.on('ready', function ()
   }
   console.log("start!!!");
  // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
+ messageManager.parse("stepper({pines:[6,7,8,9],sentido:derecha,rpm:180})")
+ // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
   
 });
+var derecha = "derecha";
+var izquierda = "izquierda";
+var stepperMotor;
+function stepper(configuracion){
+    console.log("configuracion : ",configuracion);
+    /*
+    let pin = configuracion.pin;
+    let start = configuracion.start;
+    let final = configuracion.final;
+    let tiempo = configuracion.tiempo;
+    let estrategia = configuracion.estado;
+    console.log("estrategia : ",estrategia);
+    console.log("pin : ",pin);
+    // let stepperMotor = ste[pin]
+    let range = [start, final]
+    */
+    if(!stepperMotor){
+        // pines_servos.push(pin)
+        stepperMotor = new StepperManager(configuracion);
+        // servos[pin]=servoMotor
+    }else{
+        stepperMotor.stop();
+    }
+    stepperMotor.actualizar(configuracion);
+    stepperMotor.ejecutarInstruccion(configuracion);
+}
 
 function prender(...pinesID) {
     console.log("pines : ",pinesID);
