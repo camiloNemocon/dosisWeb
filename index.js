@@ -227,7 +227,7 @@ board.on('ready', function ()
   }
   console.log("start!!!");
  // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
- messageManager.parse("stepper({pines:[6,7,8,9],sentido:derecha,rpm:180})")
+ messageManager.parse("stepper({pines:[2,3,4,5],sentido:derecha,rpm:180})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
   
 });

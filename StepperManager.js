@@ -26,11 +26,21 @@ class StepperManager  {
   }
   actualizar(p){
     console.log("p : ",p);
+  this.stepper.rpm(180).direction(Stepper.DIRECTION.CCW).accel(1600).decel(1600);
 
   }
   ejecutarInstruccion(parametros){
     console.log("parametros : ",parametros);
-    console.log("-----------------");
+  this.stepper.step(2000, () => {
+    console.log("done moving CCW");
+
+    // once first movement is done, make 10 revolutions clockwise at previously
+    //      defined speed, accel, and decel by passing an object into stepper.step
+    this.stepper.step({
+      steps: 2000,
+      direction: Stepper.DIRECTION.CW
+    }, () => console.log("done moving CW"));
+  });
   }
 
   // methods
