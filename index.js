@@ -227,15 +227,25 @@ board.on('ready', function ()
   }
   console.log("start!!!");
  // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
- messageManager.parse("stepper({pines:[2,3,4,5],sentido:derecha,rpm:180})")
+ messageManager.parse("stepper({pines:[2,3,4,5],tiempo:20,estado:0,circuito:L293D,motor:nema17})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
   
 });
 var derecha = "derecha";
 var izquierda = "izquierda";
+var L293D = "l293d";
+var l293d = "l293d";
+var L293d = "l293d";
+var l293D = "l293d";
+var a4988 = "a4988";
+var A4988 = "a4988";
+var easydriver = "easydriver";
+var Easydriver = "easydriver";
+var easyDriver = "easydriver";
+var nema17 = "nema17";
 var stepperMotor;
 function stepper(configuracion){
-    console.log("configuracion : ",configuracion);
+    console.log("configuracion 1 : ",configuracion);
     /*
     let pin = configuracion.pin;
     let start = configuracion.start;
