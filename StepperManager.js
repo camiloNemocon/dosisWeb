@@ -15,6 +15,8 @@ class StepperManger  {
 		}
 		if(args.motor==='nema17'){
 			stepsPerRev=200;
+			// stepsPerRev=400;
+			// stepsPerRev=1048;
 		}else if(args.motor==='28byj-48'){
 			stepsPerRev=2048;
 		}
@@ -27,6 +29,7 @@ class StepperManger  {
 		}
 		
 		this.fiveStepper = new Stepper({
+			id:'stepper-dosis',
 	      pins:args.pines,
 	      stepsPerRev,
 	      type
@@ -55,19 +58,19 @@ class StepperManger  {
 		// 180r/m 1m/60s = 3r/s v=d/t = t=d/v
 		this.fiveStepper
 			.rpm(180)
-			.direction(Stepper.DIRECTION.CCW)
+			.direction(Stepper.DIRECTION.CW)
 			.accel(0)
 			.decel(0);
 		if(this.strategy)this.strategy.reset();
 		this.elegirEstrategia(opts.estado);
 		return
-		this.fiveStepper.range=opts.range;
+		// this.fiveStepper.range=opts.range;
 	}
 	ejecutarInstruccion (parametros){
 		this.strategy.muevase(parametros)
 	}
 	stop(){
-		this.fiveStepper.stop();
+		// this.fiveStepper.stop();
 		this.strategy.stop();
 	}
 }
@@ -91,28 +94,36 @@ class Bucle extends Strategy{
 
 	muevase (parametros){
 		let limite = parametros.tiempo*1000;
+		console.log("parametros : ",parametros);
 		console.log("limite : ",limite);
 		let starTime = new Date().getTime()
 		console.log("starTime : ",starTime);
 		// return
+		/*
 		let interval_id = setInterval( ()=> {
-			this.stepperDosis.fiveStepper.step(4, () => {})
+			this.stepperDosis.fiveStepper.step(5, () => {})
 			let lapso = new Date().getTime()-starTime
 			console.log("lapso : ",lapso);
 			if(lapso>limite){
 				clearInterval(interval_id);
 			}
 		}, 60)
-		return;
+		*/
+		// return;
 		console.log("parametros : ",parametros);
 		console.log('++++++++++++++++++++++++');
-		let steps = parametros.tiempo*(180/60)*200;
+		let steps;
+		steps = parametros.tiempo*(180/60)*200;
+		steps = 200;
+		steps = parametros.pasos;
 		console.log("steps : ",steps);
 		// this.stepperDosis.fiveStepper.sweep()
 		this.stepperDosis.fiveStepper.step(steps, () => {
 			console.log("done moving CCW");
+			console.log(this.id);
 			// once first movement is done, make 10 revolutions clockwise at previously
 			// defined speed, accel, and decel by passing an object into stepper.step
+			return;
 			this.stepperDosis.fiveStepper.step({
 				steps: steps,
 				direction: Stepper.DIRECTION.CW

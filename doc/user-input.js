@@ -6,6 +6,7 @@ prender(2,4,7,8)
 
 apagarTodo()
 
+stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})
 stepper({pines:[2,3,4,5],sentido:derecha,rpm:180,estado:0,circuito:L293D,motor:nema17})
 stepper({pines:[2,3,4,5],tiempo:20,estado:0,circuito:L293D,motor:nema17})
 stepper({pines:[2,3,4,5],sentido:derecha,rpm:180,estado:1,pinFin:1})

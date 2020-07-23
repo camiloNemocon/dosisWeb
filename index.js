@@ -63,25 +63,34 @@ io.on('connection', function(socket)
   socket.on('chat message', function(msg)
   {
     console.log("msg: ",msg);
-    messageManager.parse(msg);
-    return
-    /*
-    try
-    {
-        io.emit('chat message', msg);
-        eval(msg);
+    let is_parsing;
+    is_parsing = true;
+    is_parsing = false;
+    if(is_parsing){
 
+      messageManager.parse(msg);
+      console.log("msg : ",msg);
+    }else{
+
+
+      try
+      {
+          io.emit('chat message', msg);
+          eval(msg);
+          // eval(`console.log(${msg})`);
+
+      }
+      catch (e)   
+      {
+          io.emit('eval error', e.toString());
+          console.log("eval error: ",e); 
+          var trace = stackTrace.parse(e);
+          console.log("trace : ",trace);
+          let error = {'eval error':e.toString(),trace}
+          fs.writeFileSync('log.json',JSON.stringify(error,null,2),'utf8')
+      }
     }
-    catch (e)   
-    {
-        io.emit('eval error', e.toString());
-        console.log("eval error: ",e); 
-        var trace = stackTrace.parse(e);
-        console.log("trace : ",trace);
-        let error = {'eval error':e.toString(),trace}
-        fs.writeFileSync('log.json',JSON.stringify(error,null,2),'utf8')
-    }
-      */
+      
  });
 });
 /*
@@ -227,7 +236,7 @@ board.on('ready', function ()
   }
   console.log("start!!!");
  // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
- messageManager.parse("stepper({pines:[2,3,4,5],tiempo:20,estado:0,circuito:L293D,motor:nema17})")
+ // messageManager.parse("stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
   
 });
@@ -244,6 +253,7 @@ var Easydriver = "easydriver";
 var easyDriver = "easydriver";
 var nema17 = "nema17";
 var stepperMotor;
+var sm;
 function stepper(configuracion){
     console.log("configuracion 1 : ",configuracion);
     /*
@@ -260,6 +270,8 @@ function stepper(configuracion){
     if(!stepperMotor){
         // pines_servos.push(pin)
         stepperMotor = new StepperManager(configuracion);
+        sm = stepperMotor.fiveStepper;
+        console.log("sm : ",sm);
         // servos[pin]=servoMotor
     }else{
         stepperMotor.stop();
