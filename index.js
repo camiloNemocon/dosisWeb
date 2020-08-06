@@ -64,8 +64,8 @@ io.on('connection', function(socket)
   {
     console.log("msg: ",msg);
     let is_parsing;
-    is_parsing = true;
     is_parsing = false;
+    is_parsing = true;
     if(is_parsing){
 
       messageManager.parse(msg);
@@ -248,6 +248,8 @@ var L293d = "l293d";
 var l293D = "l293d";
 var a4988 = "a4988";
 var A4988 = "a4988";
+var byj48 = "byj48";
+var uln2003 = "uln2003";
 var easydriver = "easydriver";
 var Easydriver = "easydriver";
 var easyDriver = "easydriver";

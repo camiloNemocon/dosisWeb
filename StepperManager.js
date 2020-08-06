@@ -17,8 +17,10 @@ class StepperManger  {
 			stepsPerRev=200;
 			// stepsPerRev=400;
 			// stepsPerRev=1048;
-		}else if(args.motor==='28byj-48'){
+			this.rpm = 180;
+		}else if(args.motor==='byj48'){
 			stepsPerRev=2048;
+			this.rpm = 15;
 		}
 		
 		if(type===-1){
@@ -57,7 +59,7 @@ class StepperManger  {
 		console.log('actualizar');
 		// 180r/m 1m/60s = 3r/s v=d/t = t=d/v
 		this.fiveStepper
-			.rpm(180)
+			.rpm(opts.rpm)
 			.direction(Stepper.DIRECTION.CW)
 			.accel(0)
 			.decel(0);
