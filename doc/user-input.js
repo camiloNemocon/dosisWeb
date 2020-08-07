@@ -10,6 +10,7 @@ stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})
 stepper({pines:[2,3,4,5],sentido:derecha,rpm:180,estado:0,circuito:L293D,motor:nema17})
 stepper({pines:[2,3,4,5],tiempo:20,estado:0,circuito:L293D,motor:nema17})
 stepper({pines:[2,3,4,5],sentido:derecha,rpm:180,estado:1,pinFin:1})
+stepper({pines:[2,3,4,5],sentido:derecha,rpm:15,pasos:2048,circuito:uln2003,motor:byj48,estado:0})
 
 servo({pin:10,estado:0, start:10, final:0, tiempo:3, pasos:3})
 servo({pin:10,estado:0, start:10, final:150, tiempo:3, pasos:3})
