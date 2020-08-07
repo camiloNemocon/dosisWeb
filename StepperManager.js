@@ -50,17 +50,27 @@ class StepperManger  {
 			case 0:
 				this.strategy = new Bucle(this)
 				break
+			case 1:
+				this.strategy = new VayaYVenga(this)
+				break
 			default:
 				this.strategy = new Bucle(this)
 		}
 	}
 	actualizar(opts){
-		console.log("opts : ",opts);
+		console.log("opts :>>>> ",opts);
 		console.log('actualizar');
+		let dir =-1;
+		if(opts.dir==='horario'){
+			dir = 1;
+		}else if(opts.dir==='anti'){
+			dir = 0;
+		}
+		console.log("dir : __________",dir);
 		// 180r/m 1m/60s = 3r/s v=d/t = t=d/v
 		this.fiveStepper
 			.rpm(opts.rpm)
-			.direction(Stepper.DIRECTION.CW)
+			.direction(dir)
 			.accel(0)
 			.decel(0);
 		if(this.strategy)this.strategy.reset();
@@ -96,10 +106,10 @@ class Bucle extends Strategy{
 
 	muevase (parametros){
 		let limite = parametros.tiempo*1000;
-		console.log("parametros : ",parametros);
-		console.log("limite : ",limite);
+		// console.log("parametros *******: ",parametros);
+		// console.log("limite : ",limite);
 		let starTime = new Date().getTime()
-		console.log("starTime : ",starTime);
+		// console.log("starTime : ",starTime);
 		// return
 		/*
 		let interval_id = setInterval( ()=> {
@@ -112,8 +122,6 @@ class Bucle extends Strategy{
 		}, 60)
 		*/
 		// return;
-		console.log("parametros : ",parametros);
-		console.log('++++++++++++++++++++++++');
 		let steps;
 		steps = parametros.tiempo*(180/60)*200;
 		steps = 200;
@@ -121,15 +129,65 @@ class Bucle extends Strategy{
 		console.log("steps : ",steps);
 		// this.stepperDosis.fiveStepper.sweep()
 		this.stepperDosis.fiveStepper.step(steps, () => {
+			console.log("parametros : ",parametros);
+			console.log('++++++++++++++++++++++++');
 			console.log("done moving CCW");
-			console.log(this.id);
+			// console.log("this : ",this);
+			// console.log("id",this.id);
+			// console.log("id",this.stepperDosis.fiveStepper.id);
+			// console.log("id",this.fiveStepper.id);
+			let current_direction = this.stepperDosis.fiveStepper.direction();
+			let new_direction = -1;
+			if(current_direction===0){
+				new_direction=1
+			}else {
+				new_direction=0
+
+			}
+			console.log("current_direction : ",current_direction);
+			console.log("steps : ",steps);
+			console.log("new_direction : ",new_direction);
 			// once first movement is done, make 10 revolutions clockwise at previously
 			// defined speed, accel, and decel by passing an object into stepper.step
 			return;
 			this.stepperDosis.fiveStepper.step({
 				steps: steps,
-				direction: Stepper.DIRECTION.CW
-			}, () => console.log("done moving CW"));
+				direction: new_direction
+			}, () => {
+				this
+				console.log("parametros : ",parametros);
+				console.log("done moving CW");
+				this.muevase(parametros)
+			} );
+		});
+	}
+}
+class VayaYVenga extends Strategy{
+	constructor(motor) {
+		super(motor)
+		console.log('VayaYVenga created')
+	}
+
+	muevase (parametros){
+		let limite = parametros.tiempo*1000;
+		let starTime = new Date().getTime()
+		let steps;
+		steps = parametros.pasos;
+		this.stepperDosis.fiveStepper.step(steps, () => {
+			let current_direction = this.stepperDosis.fiveStepper.direction();
+			let new_direction = -1;
+			if(current_direction===0){
+				new_direction=1
+			}else {
+				new_direction=0
+
+			}
+			this.stepperDosis.fiveStepper.step({
+				steps: steps,
+				direction: new_direction
+			}, () => {
+				this.muevase(parametros)
+			} );
 		});
 	}
 }

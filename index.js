@@ -254,6 +254,8 @@ var easydriver = "easydriver";
 var Easydriver = "easydriver";
 var easyDriver = "easydriver";
 var nema17 = "nema17";
+var horario = "horario";
+var anti = "anti";
 var stepperMotor;
 var sm;
 function stepper(configuracion){
@@ -273,7 +275,7 @@ function stepper(configuracion){
         // pines_servos.push(pin)
         stepperMotor = new StepperManager(configuracion);
         sm = stepperMotor.fiveStepper;
-        console.log("sm : ",sm);
+        // console.log("sm : ",sm);
         // servos[pin]=servoMotor
     }else{
         stepperMotor.stop();
