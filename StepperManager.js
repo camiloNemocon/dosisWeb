@@ -134,35 +134,6 @@ class Bucle extends Strategy{
 			console.log("parametros : ",parametros);
 			console.log('++++++++++++++++++++++++');
 			console.log("done moving CCW");
-			return;
-			/*
-			// console.log("id",this.id);
-			// console.log("this : ",this);
-			// console.log("id",this.stepperDosis.fiveStepper.id);
-			// console.log("id",this.fiveStepper.id);
-			let current_direction = this.stepperDosis.fiveStepper.direction();
-			let new_direction = -1;
-			if(current_direction===0){
-				new_direction=1
-			}else {
-				new_direction=0
-
-			}
-			console.log("current_direction : ",current_direction);
-			console.log("steps : ",steps);
-			console.log("new_direction : ",new_direction);
-			// once first movement is done, make 10 revolutions clockwise at previously
-			// defined speed, accel, and decel by passing an object into stepper.step
-			this.stepperDosis.fiveStepper.step({
-				steps: steps,
-				direction: new_direction
-			}, () => {
-				this
-				console.log("parametros : ",parametros);
-				console.log("done moving CW");
-				this.muevase(parametros)
-			} );
-			*/
 		});
 	}
 }
@@ -199,7 +170,6 @@ class VayaYVenga extends Strategy{
 	}
 	stop(){
 		this.isMoving = false;
-		// this.stepperDosis.fiveStepper.rpm(0);
 	}
 }
 
