@@ -58,7 +58,7 @@ class StepperManger  {
 		}
 	}
 	actualizar(opts){
-		console.log("opts :>>>> ",opts);
+		console.log("opts :>>>>>>>>>>>>>> ",opts);
 		console.log('actualizar');
 		let dir =-1;
 		if(opts.dir==='horario'){
@@ -94,7 +94,7 @@ class Strategy {
 	muevase (parametros){
 		console.log('muevase usando five.animation api');
 	}
-	stop(){}
+	stop(){	}
 	reset(){}
 }
 
@@ -127,13 +127,17 @@ class Bucle extends Strategy{
 		steps = 200;
 		steps = parametros.pasos;
 		console.log("steps : ",steps);
+		let rpm = this.stepperDosis.fiveStepper.rpm();
+		console.log("rpm : ",rpm);
 		// this.stepperDosis.fiveStepper.sweep()
 		this.stepperDosis.fiveStepper.step(steps, () => {
 			console.log("parametros : ",parametros);
 			console.log('++++++++++++++++++++++++');
 			console.log("done moving CCW");
-			// console.log("this : ",this);
+			return;
+			/*
 			// console.log("id",this.id);
+			// console.log("this : ",this);
 			// console.log("id",this.stepperDosis.fiveStepper.id);
 			// console.log("id",this.fiveStepper.id);
 			let current_direction = this.stepperDosis.fiveStepper.direction();
@@ -149,7 +153,6 @@ class Bucle extends Strategy{
 			console.log("new_direction : ",new_direction);
 			// once first movement is done, make 10 revolutions clockwise at previously
 			// defined speed, accel, and decel by passing an object into stepper.step
-			return;
 			this.stepperDosis.fiveStepper.step({
 				steps: steps,
 				direction: new_direction
@@ -159,12 +162,14 @@ class Bucle extends Strategy{
 				console.log("done moving CW");
 				this.muevase(parametros)
 			} );
+			*/
 		});
 	}
 }
 class VayaYVenga extends Strategy{
 	constructor(motor) {
 		super(motor)
+		this.isMoving = true;
 		console.log('VayaYVenga created')
 	}
 
@@ -173,6 +178,7 @@ class VayaYVenga extends Strategy{
 		let starTime = new Date().getTime()
 		let steps;
 		steps = parametros.pasos;
+		if(!this.isMoving)return;
 		this.stepperDosis.fiveStepper.step(steps, () => {
 			let current_direction = this.stepperDosis.fiveStepper.direction();
 			let new_direction = -1;
@@ -182,6 +188,7 @@ class VayaYVenga extends Strategy{
 				new_direction=0
 
 			}
+			if(!this.isMoving)return;
 			this.stepperDosis.fiveStepper.step({
 				steps: steps,
 				direction: new_direction
@@ -189,6 +196,10 @@ class VayaYVenga extends Strategy{
 				this.muevase(parametros)
 			} );
 		});
+	}
+	stop(){
+		this.isMoving = false;
+		// this.stepperDosis.fiveStepper.rpm(0);
 	}
 }
 
