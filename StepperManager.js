@@ -61,9 +61,9 @@ class StepperManger  {
 		console.log("opts :>>>>>>>>>>>>>> ",opts);
 		console.log('actualizar');
 		let dir =-1;
-		if(opts.dir==='horario'){
+		if(opts.sentido==='horario'){
 			dir = 1;
-		}else if(opts.dir==='anti'){
+		}else if(opts.sentido==='anti'){
 			dir = 0;
 		}
 		console.log("dir : __________",dir);
