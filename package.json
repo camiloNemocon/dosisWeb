@@ -13,8 +13,6 @@
     "express": "^4.15.2",
     "johnny-five": "^1.4.0",
     "keypress": "^0.2.1",
-    "nodemon": "^2.0.4",
-    "npm": "^6.14.7",
     "socket.io": "^1.7.3",
     "stack-trace": "0.0.10"
   },
