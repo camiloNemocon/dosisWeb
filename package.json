@@ -13,6 +13,7 @@
     "express": "^4.15.2",
     "johnny-five": "^1.5.0",
     "keypress": "^0.2.1",
+    "osc-min": "^1.1.2",
     "socket.io": "^1.7.3",
     "stack-trace": "0.0.10"
   },
