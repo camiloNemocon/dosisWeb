@@ -149,5 +149,10 @@ window.addEventListener("keydown", function(event) {
   if((event.ctrlKey || event.metaKey) &&event.shiftKey &&event.code == "keyK") {
     event.preventDefault();
   }
+  if(event.ctrlKey){
+    if(event.key==="q"){
+      $('#messages').empty();
+    }
+  }
 })
   
