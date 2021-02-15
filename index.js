@@ -37,6 +37,13 @@ var ñ=7;
 var loopID;
 //intervalo de tiempo
 let intervalo = 1000;
+let process_arg = process.argv;
+console.log("process_arg" , process_arg);
+let portFromArguments=-1;
+if(process_arg[2]){
+  portFromArguments = process_arg[2];
+}
+console.log('com: ', portFromArguments);
 
 
 let contadorIndice=0;
@@ -53,10 +60,16 @@ app.get('/', function(req, res){
 let is_testing;
 is_testing = true;
 is_testing = false;
+const repl=false;
+const nonComConfig = {repl}
+const comConfig = {  
+  port: portFromArguments,
+  repl
+};
+let boardConfig = portFromArguments===-1?nonComConfig:comConfig;
+console.log('boardConfig: ', boardConfig);
 if(!is_testing)
-var board = new five.Board({
-    repl:false
-    });
+var board = new five.Board(boardConfig);
 
 io.on('connection', function(socket)
 {
