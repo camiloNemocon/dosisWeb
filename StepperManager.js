@@ -8,9 +8,22 @@ class StepperManger  {
 		//motor: 28byj-48, nema17
 		let type=-1;
 		let stepsPerRev=-1;
-		if(args.circuito==='easydriver'){
+		let pins=-1;
+		let rpm = -1;
+		let pinParar=-1;
+		if(args.circuito==='easydriver'||args.circuito==='a4988'){
 			type=1;
-		}else if(args.circuito==='l293d'||args.circuito==='a4988'||args.circuito==='uln2003'){
+			if(args.pines){
+				if(args.pines.length!==2&&args.pines.length!==4){
+					throw new Error("debiste escribir dos o cuatro pines para el driver")
+				}
+				pins = args.pines;
+				rpm = args.rpm;
+				pinParar = args.pinParar;
+			}else if(args.pinDir && args.pinPaso){
+				pins = [args.pinPaso, args.pinDir]
+			}
+		}else if(args.circuito==='l293d'||args.circuito==='uln2003'){
 			type=4;
 		}
 		if(args.motor==='nema17'){
@@ -29,13 +42,17 @@ class StepperManger  {
 		if(stepsPerRev===-1){
 			throw new Error("No se eligió bien el motor")
 		}
-		
+		if(pins===-1){
+			throw new Error("No se eligieron bien los pines del arduino")
+		}
+		this.stepsPerRev =stepsPerRev;
 		this.fiveStepper = new Stepper({
 			id:'stepper-dosis',
-	      pins:args.pines,
+	      pins,
 	      stepsPerRev,
-	      type
+		  type
 	    })
+		console.log('type: ===========', type);
 		
    
 		// console.log('servo en pin no. :', pin)
@@ -126,8 +143,15 @@ class Bucle extends Strategy{
 		steps = parametros.tiempo*(180/60)*200;
 		steps = 200;
 		steps = parametros.pasos;
+		if(!steps){
+			if(parametros.vueltas&&this.stepperDosis.stepsPerRev){
+				steps=parametros.vueltas*this.stepperDosis.stepsPerRev;
+			}
+		}
 		console.log("steps : ",steps);
 		let rpm = this.stepperDosis.fiveStepper.rpm();
+		const stepsPerRev = this.stepperDosis.stepsPerRev;
+		console.log('stepsPerRev: ', stepsPerRev);
 		console.log("rpm : ",rpm);
 		// this.stepperDosis.fiveStepper.sweep()
 		this.stepperDosis.fiveStepper.step(steps, () => {
