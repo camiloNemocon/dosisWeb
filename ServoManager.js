@@ -39,6 +39,9 @@ class ServoManager  {
 		}
 	}
 	actualizar(opts){
+		const oldRange = this.fiveServo.range;
+		console.log('oldRange: ', oldRange);
+		console.log('opts: actualizar', opts);
 		this.fiveServo.range=opts.range;
 		if(this.strategy)this.strategy.reset();
 		this.elegirEstrategia(opts.estrategia);
@@ -105,13 +108,19 @@ class Ir extends Strategy{
 	}
 
 	muevase (parametros){
-		// console.log("parametros : ",parametros);
+		console.log("parametros : Ir",parametros);
 		// console.log("this : ",this);
 		// console.log('Ir algorithm, this.fiveServo: ',this.fiveServo)
 		/*
 		 Move a servo horn to specified position in degrees, 0-180 (or whatever the current valid range is). If ms is specified, the servo will take that amount of time to move to the position. If rate is specified, the angle change will be split into distance/rate steps for the ms option. If the specified angle is the same as the current angle, no commands are sent.
 		 */
-		this.servoDosis.fiveServo.to(parametros.final,parametros.tiempo*1000)
+		const targetAngle = parametros.final;
+		const range = this.servoDosis.fiveServo.range;
+		console.log('range: ', range);
+		console.log('targetAngle: ', targetAngle);
+		const time = parametros.tiempo * 1000;
+		console.log('time: ', time);
+		this.servoDosis.fiveServo.to(targetAngle,time);
 	}
 }
 class IrRapido extends Strategy{
