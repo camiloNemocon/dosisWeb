@@ -23,6 +23,11 @@ $(function () {
     $('#messages').prepend($('<li>').text(msg));
     // window.scrollTo(0, document.body.scrollHeight);
   });
+  socket.on('server crashed', function(msg){
+    console.log("msg : ",msg);
+    $('#messages').prepend($('<li>').text(msg));
+    // window.scrollTo(0, document.body.scrollHeight);
+  });
   // console.log("codigo : ",codigo);
   editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     

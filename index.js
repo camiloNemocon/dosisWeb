@@ -453,7 +453,11 @@ http.listen(port, function()
 {
   console.log('listening on *:' + port);
 });
-
+process.on('uncaughtException', err => {
+  console.error('There was an uncaught error', err)
+  io.emit('server crashed', "The server crashed!!!!!!!!!!!!!--El servidor se jodio");
+  process.exit(1) //mandatory (as per the Node.js docs)
+})
 /*
 // to do: add more examples
 // to try this example, run the processing sketch in the folder processing.
