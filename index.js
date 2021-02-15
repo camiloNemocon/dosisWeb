@@ -296,7 +296,11 @@ function stepper(configuracion){
     stepperMotor.actualizar(configuracion);
     stepperMotor.ejecutarInstruccion(configuracion);
 }
-
+function detenerPAP() {
+  if(stepperMotor){
+    stepperMotor.stop();
+  }
+}
 function prender(...pinesID) {
     console.log("pines : ",pinesID);
 
