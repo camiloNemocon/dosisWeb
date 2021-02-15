@@ -32,6 +32,7 @@ class MessageManager extends EventEmitter{
 			for(let i = 0; i < argumentos.length;i++){
 				let argumento = argumentos[i];
 				let objectReconstructed = this.objecReconstructor(argumento)
+				console.log('objectReconstructed: ', objectReconstructed);
 				objectReconstruction.push(objectReconstructed)
 				continue
 				// console.log("argumento : ",argumento);
@@ -121,7 +122,21 @@ class MessageManager extends EventEmitter{
 		if(isObject){
 			objectExpression.properties.forEach(function(property){
 				let key = property.key.name;
-				let value = property.value.value;
+				let value;
+				if(property.value.type==='NumericLiteral'){
+					value = property.value.value;
+				} else if(property.value.type==='Identifier'){
+					value = property.value.name;
+					
+					if(!global[value]){
+						console.log(value, 'added to global!')
+						global[value]=value;
+					}
+					
+				}
+				if(value===undefined || value === null){
+					console.log("undefined value for key ", key)
+				}
 				output[key] = value
 
 			})
