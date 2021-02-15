@@ -13,7 +13,7 @@ let MessageManager = require('./MessageManager')
 let messageManager = new MessageManager();
 messageManager.on('parsed',function(msg,name,thing){
     // arguments
-    console.log("arguments : ",arguments);
+    // console.log("arguments : ",arguments);
     // console.log("thing : ",thing);
         try{
             io.emit('chat message', msg);
@@ -45,7 +45,6 @@ if(process_arg[2]){
 }
 console.log('com: ', portFromArguments);
 
-
 let contadorIndice=0;
 
 
@@ -75,6 +74,7 @@ io.on('connection', function(socket)
 {
   socket.on('chat message', function(msg)
   {
+    console.clear();
     console.log("msg: ",msg);
     let is_parsing;
     is_parsing = false;
@@ -226,6 +226,7 @@ function servo(configuracion){
         });
         servos[pin]=servoMotor
     }else{
+      console.log('stopping servo')
         servoMotor.stop();
     }
     servoMotor.actualizar({estrategia,range});
@@ -251,6 +252,7 @@ board.on('ready', function ()
  // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
  // messageManager.parse("stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
+//  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
   
 });
 var derecha = "derecha";
