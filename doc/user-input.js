@@ -77,3 +77,24 @@ servo({pin:10,estado:0, start:0, final:45})
 servo({pin:10,estado:1, veces:5,start:20, final:10,tiempo:2})  
 servo({pin:10,estado:0, veces:5,start:20, final:90,tiempo:0.5})  
 servo({pin:10,estado:2, veces:5,start:20, final:115,tiempo:0.5})  
+
+
+// ███████╗██╗   ██╗███╗   ██╗ ██████╗██╗  ██╗
+// ██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝██║  ██║
+// ███████╗ ╚████╔╝ ██╔██╗ ██║██║     ███████║
+// ╚════██║  ╚██╔╝  ██║╚██╗██║██║     ██╔══██║
+// ███████║   ██║   ██║ ╚████║╚██████╗██║  ██║
+// ╚══════╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝
+                                           
+
+// ___    __            
+//  |  | |  \  /\  |    
+//  |  | |__/ /~~\ |___ 
+                     
+                                                                 
+sincronizarPin({s:bd,tipo:tidal,pin:4,gate:100})
+
+sincronizarPin({s:arpy,tipo:tidal,pin:2,gate:400})
+detenerSincro(2)
+detenerSincro(2)
+detenerSincro(4,2)

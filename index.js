@@ -10,7 +10,7 @@ let ServoManager = require('./ServoManager')
 let StepperManager = require('./StepperManager')
 let MessageManager = require('./MessageManager')
 
-// new ServoManager()
+// new ServoManager()|||
 let messageManager = new MessageManager();
 messageManager.on('parsed',function(msg,name,thing){
     // arguments
@@ -522,9 +522,9 @@ function sincronizarPin(userParams) {
     io.emit("Se le olvido el pin, gente!")
     return;
   }
-  let synchStrategy = syncedPins[userParams.pin];
-  if(synchStrategy){
-    synchStrategy.update(userParams);
+  let syncManager = syncedPins[userParams.pin];
+  if(syncManager){
+    syncManager.strategy.update(userParams);
 
   }else{
     let listenerType
@@ -535,14 +535,32 @@ function sincronizarPin(userParams) {
       listenerType = tidalListener;
 
     }
-    const syncManager = new SinchronicityManager(userParams,listenerType);
-    synchStrategy = syncManager.strategy;
-    syncManager.on(SinchronicityManager.gateUpEvent,(pin)=>{console.log('prendiendo pin',pin);prender(pin)})
+    syncManager = new SinchronicityManager(userParams,listenerType);
+    // synchStrategy = syncManager.strategy;
+    syncManager.on(SinchronicityManager.gateUpEvent,onGateUp)
     // syncManager.on(SinchronicityManager.gateUpEvent,prender)
-    syncManager.on(SinchronicityManager.gateDownEvent,(pin)=>{console.log('apagando pin',pin);apagar(pin)})
+    syncManager.on(SinchronicityManager.gateDownEvent,onGateDown)
     // syncManager.on(SinchronicityManager.gateUpEvent,apagar)
-    syncedPins[userParams.pin]= synchStrategy;
+    syncedPins[userParams.pin]= syncManager;
   }
   // tidalListener.off(TidalListener.oscReceivedEvent, oscListener)
   // tidalListener.on(TidalListener.oscReceivedEvent, oscListener)
+}
+function onGateUp(pin){
+  console.log('prendiendo pin',pin);prender(pin);
+}
+function onGateDown(pin){
+  console.log('prendiendo pin',pin);apagar(pin);
+}
+
+function detenerSincro(...pines){
+  pines.forEach(pin => {
+    console.log('pin: ', pin);
+    if(syncedPins[pin]){
+      syncedPins[pin].removeListener(SinchronicityManager.gateUpEvent,onGateUp);
+      syncedPins[pin].removeListener(SinchronicityManager.gateDownEvent,onGateDown);
+      syncedPins[pin] = null;
+    }
+    
+  });
 }
