@@ -1,3 +1,4 @@
+console.clear();
 let fs = require('fs');
 var stackTrace = require('stack-trace');
 const express = require('express');
@@ -18,7 +19,7 @@ messageManager.on('parsed',function(msg,name,thing){
         try{
             io.emit('chat message', msg);
             eval(msg)
-            console.log("msg : ",msg);
+            console.log("msg : parsed",msg);
         }catch(e){
             io.emit('eval error', e.toString());
             console.log("eval error: ",e); 
@@ -32,7 +33,10 @@ messageManager.on('parsed',function(msg,name,thing){
 var five = require('johnny-five');
 var Servo = five.Servo;
 var led;
-var ñ=7;
+// const TidalListener = require("./osc/osc-listeners/tidal-listener");
+const SinchronicityManager = require('./SinchronicityManager');
+const TidalListener = require('./osc/osc-listeners/tidal-listener');
+// const tidalListener = new TidalListener();
 //cronometro del interval
 var loopID;
 //intervalo de tiempo
@@ -82,7 +86,7 @@ io.on('connection', function(socket)
     if(is_parsing){
 
       messageManager.parse(msg);
-      console.log("msg : ",msg);
+      console.log("msg 4 eval : ",msg);
     }else{
 
 
@@ -253,6 +257,7 @@ board.on('ready', function ()
  // messageManager.parse("stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
 //  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
+  // messageManager.parse("sincronizarPin({s:arpy,tipo:tidal,pin:4,gate:200})")
   
 });
 var derecha = "derecha";
@@ -508,3 +513,36 @@ process.on('uncaughtException', function (err) {
   console.log('pin pon papaps',err);
 })
 */
+let syncingThang;
+let syncedPins = {};
+let tidalListener;
+function sincronizarPin(userParams) {
+  console.log('userParams: __________', userParams);
+  if(!userParams.pin){
+    io.emit("Se le olvido el pin, gente!")
+    return;
+  }
+  let synchStrategy = syncedPins[userParams.pin];
+  if(synchStrategy){
+    synchStrategy.update(userParams);
+
+  }else{
+    let listenerType
+    if(userParams.tipo === "tidal"){
+      if(!tidalListener){
+        tidalListener = new TidalListener()
+      }
+      listenerType = tidalListener;
+
+    }
+    const syncManager = new SinchronicityManager(userParams,listenerType);
+    synchStrategy = syncManager.strategy;
+    syncManager.on(SinchronicityManager.gateUpEvent,(pin)=>{console.log('prendiendo pin',pin);prender(pin)})
+    // syncManager.on(SinchronicityManager.gateUpEvent,prender)
+    syncManager.on(SinchronicityManager.gateDownEvent,(pin)=>{console.log('apagando pin',pin);apagar(pin)})
+    // syncManager.on(SinchronicityManager.gateUpEvent,apagar)
+    syncedPins[userParams.pin]= synchStrategy;
+  }
+  // tidalListener.off(TidalListener.oscReceivedEvent, oscListener)
+  // tidalListener.on(TidalListener.oscReceivedEvent, oscListener)
+}
