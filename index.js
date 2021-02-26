@@ -242,18 +242,16 @@ function apagarServos() {
 if(!is_testing)
 board.on('ready', function () 
 {
- for (let i = 0; i < 13; i++)
- {
-    var pin = new five.Pin({ pin: i,mode: 1});
-    pines.push(pin);
-    pin.low();
-  }
   console.log("start!!!");
  // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
  // messageManager.parse("stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
 //  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
-  
+// messageManager.parse("loopArduino(2,4)");
+// messageManager.parse("sameTime({pin:2,start:0.5,lapse:1},{pin:4,start:0.25,lapse:0.75})");
+// sameTime({pin:2,start:0.5,lapse:1},{pin:4,start:0.25,lapse:0.75});
+// cambiarIntervalo(100);
+  // setTimeout(()=> messageManager.parse("apagarTodo()"),10000);
 });
 var derecha = "derecha";
 var izquierda = "izquierda";
@@ -303,6 +301,7 @@ function detenerPAP() {
     stepperMotor.stop();
   }
 }
+/* 
 function prender(...pinesID) {
     console.log("pines : ",pinesID);
 
@@ -312,7 +311,8 @@ function prender(...pinesID) {
         pines[pinesID[i]].high();
     }
 }
-
+*/
+/* 
 function apagarTodo()
 {
     for (let i = 0; i < 13; i++)
@@ -327,8 +327,10 @@ function apagarTodo()
         })
     }
     apagarServos();
+    clearInterval(loopID)
 }
-
+ */
+/* 
 function apagar(...pinesID) 
 {
     console.log("pines : ",pinesID);
@@ -339,15 +341,25 @@ function apagar(...pinesID)
         pines[pinesID[i]].low();
     }
 }
-
+ */
+/* 
 function cambiarIntervalo(argument) 
 {
     intervalo = argument;
     clearInterval(loopID);
     loopArduino();
 }
+*/
+const loopArduino = require("./digitalPinsController").loopArduino;
+const cambiarIntervalo = require("./digitalPinsController").cambiarIntervalo;
+const apagarTodo = require("./digitalPinsController").apagarTodo;
+const sameTime = require("./digitalPinsController").sameTime;
+const onceArduino = require("./digitalPinsController").onceArduino;
+const prender = require("./digitalPinsController").prender;
+const apagar = require("./digitalPinsController").apagar;
+const detenerLoop = require("./digitalPinsController").detenerLoop;
 
-function loopArduino(...pinesID) 
+/* function loopArduino(...pinesID) 
 {
     console.log("pines : ",pinesID);
 
@@ -383,8 +395,9 @@ function loopArduino(...pinesID)
         }
     
     },intervalo)
-}
+} */
 
+/* 
 function onceArduino(...pinesID) 
 {
     console.log("pines : ",pinesID);
@@ -410,15 +423,17 @@ function onceArduino(...pinesID)
 
     },intervalo)
 }
-
+*/
+/* 
 function detenerLoop()
 {
     clearInterval(loopID);
 }
 
-
+ */
 // sameTime({pin:1,start:3,lapse:4},{pin:2,start:1,lapse:2},{pin:3,start:2,lapse:2})
 // {pin:1,start:3,lapse:4,init_id:6234,stop_id:453647,id:ciclo:function(){}}
+/*
 var pinesSameTime ;
 function sameTime(...PinesData)
 {
@@ -444,7 +459,7 @@ function sameTime(...PinesData)
     }
     
 }
-
+*/
 
 
 

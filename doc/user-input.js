@@ -7,6 +7,12 @@ sameTime({pin:2,start:1,lapse:4},{pin:4,start:2,lapse:4},{pin:7,start:3,lapse:4}
 
 prender(2,4,7,8)
 
+//por defecto el intervalo es de 1000
+loopArduino(2,3,4,5) 
+cambiarIntervalo(500)
+onceArduino(2,4);
+detenerLoop()
+
 apagarTodo()
 // __  ___  ___  __   __   ___  __  
 // /__`  |  |__  |__) |__) |__  |__) 
