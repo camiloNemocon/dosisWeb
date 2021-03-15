@@ -35,7 +35,7 @@ var Servo = five.Servo;
 var led;
 // const TidalListener = require("./osc/osc-listeners/tidal-listener");
 const SinchronicityManager = require('./SinchronicityManager');
-const TidalListener = require('./osc/osc-listeners/tidal-listener');
+const TidalOSCListener = require('./osc/osc-listeners/tidal-listener');
 // const tidalListener = new TidalListener();
 //cronometro del interval
 var loopID;
@@ -515,7 +515,9 @@ process.on('uncaughtException', function (err) {
 */
 let syncingThang;
 let syncedPins = {};
-let tidalListener;
+let tidalOSCListener;
+// sincronizarPin({s:bd,tipo:tidal,pin:4,gate:100})
+// sincronizarPin({instrument:bd,tipo:supercollider,pin:5,gate:100})
 function sincronizarPin(userParams) {
   console.log('userParams: __________', userParams);
   if(!userParams.pin){
@@ -529,10 +531,10 @@ function sincronizarPin(userParams) {
   }else{
     let listenerType
     if(userParams.tipo === "tidal"){
-      if(!tidalListener){
-        tidalListener = new TidalListener()
+      if(!tidalOSCListener){
+        tidalOSCListener = new TidalOSCListener()
       }
-      listenerType = tidalListener;
+      listenerType = tidalOSCListener;
 
     }
     syncManager = new SinchronicityManager(userParams,listenerType);

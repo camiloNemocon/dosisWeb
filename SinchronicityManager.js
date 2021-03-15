@@ -1,4 +1,5 @@
 const EventEmitter = require("events");
+const AppOSCListener = require('./osc/osc-listeners/AppOSCListener');
 const TidalListener = require("./osc/osc-listeners/tidal-listener");
 class SinchronicityManager extends EventEmitter{
     constructor(p,oscListener) {
@@ -39,7 +40,7 @@ class TidalSynchronicity extends Strategy {
         this.play();
     }
     play(){
-        this.oscListener.on(TidalListener.oscReceivedEvent, this.onOscReceived.bind(this))
+        this.oscListener.on(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
 
     }
     onOscReceived(oscParams){
@@ -57,7 +58,7 @@ class TidalSynchronicity extends Strategy {
 
     }
     stop(){
-        this.oscListener.off(TidalListener.oscReceivedEvent, this.onOscReceived.bind(this))
+        this.oscListener.removeListener(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
 
     }
     update(userParams){
