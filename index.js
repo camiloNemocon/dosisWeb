@@ -36,6 +36,7 @@ var led;
 // const TidalListener = require("./osc/osc-listeners/tidal-listener");
 const SinchronicityManager = require('./SinchronicityManager');
 const TidalOSCListener = require('./osc/osc-listeners/tidal-listener');
+const SuperColliderOSCListener = require('./osc/osc-listeners/SuperColliderOSCListener');
 // const tidalListener = new TidalListener();
 //cronometro del interval
 var loopID;
@@ -258,6 +259,7 @@ board.on('ready', function ()
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
 //  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
   // messageManager.parse("sincronizarPin({s:arpy,tipo:tidal,pin:4,gate:200})")
+  // messageManager.parse("sincronizarPin({instrument:hh,escuchando:[degree,dur,detune],tipo:sc,pin:4,gate:200})")
   
 });
 var derecha = "derecha";
@@ -516,6 +518,7 @@ process.on('uncaughtException', function (err) {
 let syncingThang;
 let syncedPins = {};
 let tidalOSCListener;
+let scOSCListener;
 // sincronizarPin({s:bd,tipo:tidal,pin:4,gate:100})
 // sincronizarPin({instrument:bd,tipo:supercollider,pin:5,gate:100})
 function sincronizarPin(userParams) {
@@ -535,7 +538,12 @@ function sincronizarPin(userParams) {
         tidalOSCListener = new TidalOSCListener()
       }
       listenerType = tidalOSCListener;
-
+      
+    }else if(userParams.tipo === 'sc'){
+      if(!scOSCListener){
+        scOSCListener = new SuperColliderOSCListener()
+      }
+      listenerType = scOSCListener;
     }
     syncManager = new SinchronicityManager(userParams,listenerType);
     // synchStrategy = syncManager.strategy;

@@ -120,19 +120,23 @@ class MessageManager extends EventEmitter{
 		let isObject = objectExpression.type==="ObjectExpression";
 		// console.log("isObject : ",isObject);
 		if(isObject){
-			objectExpression.properties.forEach(function(property){
+			objectExpression.properties.forEach((property)=>{
 				let key = property.key.name;
 				let value;
 				if(property.value.type==='NumericLiteral'){
 					value = property.value.value;
 				} else if(property.value.type==='Identifier'){
 					value = property.value.name;
-					
-					if(!global[value]){
-						console.log(value, 'added to global!')
-						global[value]=value;
-					}
-					
+					this.globalize(value);
+				} else if(property.value.type === 'ArrayExpression'){
+					value = [];
+					const elements = property.value.elements;
+					elements.forEach(element => {
+						const name = element.name;
+						this.globalize(name)
+						value.push(name);
+					});
+
 				}
 				if(value===undefined || value === null){
 					console.log("undefined value for key ", key)
@@ -142,6 +146,19 @@ class MessageManager extends EventEmitter{
 			})
 		}
 		return output;
+	}
+	/**
+	 * a function that allows 'unexperienced' users to pass words without quotes
+	 * @param {string} value the word passed by the 'unexperienced' user
+	 */
+	globalize(value){
+		if(!global[value]){
+			console.warn(value, 'added to global!')
+			global[value]=value;
+		}else{
+			console.warn(value, 'is already part of global')
+		}
+
 	}
 	// methods
 }

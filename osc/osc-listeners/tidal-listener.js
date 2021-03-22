@@ -37,7 +37,7 @@ class TidalOSCListener extends AppListener {
                 }
                 */
                 // console.log("emitting from tidal listener");
-                this.emit(TidalListener.oscReceivedEvent, data)
+                this.emit(AppOSCListener.oscReceivedEvent, data)
                 // console.log('this: ', this);
                 // return console.log(rawData);
             } catch (error1) {

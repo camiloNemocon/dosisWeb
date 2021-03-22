@@ -1,6 +1,8 @@
 const EventEmitter = require("events");
 const AppOSCListener = require('./osc/osc-listeners/AppOSCListener');
-const TidalListener = require("./osc/osc-listeners/tidal-listener");
+/**
+ * The strategy context
+ */
 class SinchronicityManager extends EventEmitter{
     constructor(p,oscListener) {
         super();
@@ -9,7 +11,7 @@ class SinchronicityManager extends EventEmitter{
             case 'tidal':
                 this.strategy = new TidalSynchronicity(this,oscListener);
                 break;
-            case 1:
+            case 'sc':
                 this.strategy = new SuperColliderSynchronicity(this);
                 break;
         }
@@ -17,14 +19,27 @@ class SinchronicityManager extends EventEmitter{
 }
 SinchronicityManager.gateUpEvent = 'gateUp-event';
 SinchronicityManager.gateDownEvent = 'gateDown-event';
+/**
+ * Base class which encapsulates the algorithm that will sinchronize/match data entered by user in the
+ * dosisWeb text editor with the data coming into the dosisWeb server sent by whatever the OSC sender
+ * app is (already implemeted strategies (sort of): tidalCycles and SuperCollider; in mind strategies:
+ * vcvRack, ableton live -max for live- and PureData; many other strategies could be implemented)
+ */
 class Strategy {
+    /**
+     * 
+     * @param {SinchronicityManager} syncronization The strategy context
+     * @param {AppOSCListener} oscListener an AppOSCListener derived class: it can be a SuperColliderOSCListener,
+     * a TidalOSCListener (from here, not implemented yet), a PureDataOSCListner, a VCVRackOSCListener,
+     * a AbletonOSCListener or any other that may com into play
+     */
     constructor(syncronization,oscListener) {
         this.syncronization = syncronization;
         this.oscListener = oscListener;
         this.sound;
-        this.userParams;
+        this.userParams = syncronization.userParams;
     }
-    oscListener(){}
+    onOscReceived(oscParams){}
     stop(){}
     update(){}
 }
@@ -67,8 +82,11 @@ class TidalSynchronicity extends Strategy {
     }
 }
 class SuperColliderSynchronicity extends Strategy {
-    constructor(synchronization) {
-        super(synchronization)
+    constructor(synchronization,oscListener) {
+        super(synchronization,oscListener)
+        console.log('synchronization: ', synchronization);
+        const userParams = this.userParams;
+        console.log('userParams: ---', userParams);
     }
 }
 module.exports = SinchronicityManager;

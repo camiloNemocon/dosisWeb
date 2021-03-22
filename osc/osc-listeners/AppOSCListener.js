@@ -1,4 +1,5 @@
 const EventEmitter = require("events");
+const osc = require('osc-min');
 
 class AppOSCListener extends EventEmitter{
     constructor(){
@@ -6,8 +7,12 @@ class AppOSCListener extends EventEmitter{
     }
     onOSCRecieved(msg){
         let rawMessage = osc.fromBuffer(msg);
-        console.log('rawMessage: ', rawMessage);
+        this.processMessage(rawMessage)
     
+    }
+    processMessage(msg){
+        console.warn('Must override')
+
     }
 }
 AppOSCListener.oscReceivedEvent = "osc-received";
