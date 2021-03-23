@@ -12,7 +12,7 @@ class SinchronicityManager extends EventEmitter{
                 this.strategy = new TidalSynchronicity(this,oscListener);
                 break;
             case 'sc':
-                this.strategy = new SuperColliderSynchronicity(this);
+                this.strategy = new SuperColliderSynchronicity(this,oscListener);
                 break;
         }
     }
@@ -39,7 +39,21 @@ class Strategy {
         this.sound;
         this.userParams = syncronization.userParams;
     }
-    onOscReceived(oscParams){}
+    play(){
+        this.oscListener.on(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
+
+    }
+    stop(){
+        this.oscListener.removeListener(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
+
+    }
+    update(userParams){
+        this.stop();
+        this.userParams=userParams;
+    }
+    onOscReceived(oscParams){
+        console.warn('Must override')
+    }
     stop(){}
     update(){}
 }
@@ -53,10 +67,6 @@ class TidalSynchronicity extends Strategy {
         console.log('sound: ', sound);
         this.soundName = sound;
         this.play();
-    }
-    play(){
-        this.oscListener.on(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
-
     }
     onOscReceived(oscParams){
         console.log('oscParams: ----', oscParams);
@@ -72,14 +82,6 @@ class TidalSynchronicity extends Strategy {
         }
 
     }
-    stop(){
-        this.oscListener.removeListener(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
-
-    }
-    update(userParams){
-        this.stop();
-        this.userParams=userParams;
-    }
 }
 class SuperColliderSynchronicity extends Strategy {
     constructor(synchronization,oscListener) {
@@ -87,6 +89,11 @@ class SuperColliderSynchronicity extends Strategy {
         console.log('synchronization: ', synchronization);
         const userParams = this.userParams;
         console.log('userParams: ---', userParams);
+        this.play()
+    }
+    onOscReceived(oscParams){
+        console.log('oscParams: onOscReceived ', oscParams);
+
     }
 }
 module.exports = SinchronicityManager;

@@ -13,7 +13,6 @@ class SuperColliderOSCListener extends AppOSCListener {
             var error;
             try {
                 this.onOSCRecieved(msg);
-                this.emit(AppOSCListener.oscReceivedEvent, {a:1,b:'2'})
             } catch (error1) {
                 console.log('error1: ', error1);
                 error = error1;
