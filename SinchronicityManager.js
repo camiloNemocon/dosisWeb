@@ -93,7 +93,18 @@ class SuperColliderSynchronicity extends Strategy {
     }
     onOscReceived(oscParams){
         console.log('oscParams: onOscReceived ', oscParams);
+        const scCondition = oscParams.instrument === this.userParams.instrument;
+        if(scCondition){
 
+            this.doGate(this.userParams.pin,this.userParams.gate);
+        }
+
+    }
+    doGate(pinId,gateTime){
+        this.syncronization.emit(SinchronicityManager.gateUpEvent,pinId);
+        setTimeout(() => {
+          this.syncronization.emit(SinchronicityManager.gateDownEvent,pinId)  
+        }, gateTime);
     }
 }
 module.exports = SinchronicityManager;

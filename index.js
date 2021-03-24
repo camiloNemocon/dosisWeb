@@ -259,7 +259,8 @@ board.on('ready', function ()
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
 //  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
   // messageManager.parse("sincronizarPin({s:arpy,tipo:tidal,pin:4,gate:200})")
-  // messageManager.parse("sincronizarPin({instrument:hh,escuchando:[degree,dur,detune],tipo:sc,pin:4,gate:200})")
+  // messageManager.parse("sincronizarPin({instrument:hh,escuchando:[degree,dur,detune],tipo:sc,pin:13,gate:200})")
+  // messageManager.parse("sincronizarPin({instrument:bd,escuchando:[degree,dur,detune],tipo:sc,pin:5,gate:200})")
   
 });
 var derecha = "derecha";
@@ -560,7 +561,7 @@ function onGateUp(pin){
   console.log('prendiendo pin',pin);prender(pin);
 }
 function onGateDown(pin){
-  console.log('prendiendo pin',pin);apagar(pin);
+  console.log('apagando pin',pin);apagar(pin);
 }
 
 function detenerSincro(...pines){

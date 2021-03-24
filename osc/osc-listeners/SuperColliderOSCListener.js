@@ -40,7 +40,7 @@ class SuperColliderOSCListener extends AppOSCListener {
             // console.log('key: ', key);
             data[key] = value;
         }
-        data.instrument = address;
+        data.address = address;
         // console.log('data: ', data);
         this.emit(AppOSCListener.oscReceivedEvent, data)
 
