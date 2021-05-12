@@ -7,7 +7,7 @@
     "babylon": "^6.18.0",
     "browserify": "^16.5.2",
     "chokidar": "^3.4.2",
-    "codemirror": "^5.58.1",
+    "codemirror": "^5.58.2",
     "escodegen": "^1.14.3",
     "esprima": "^4.0.1",
     "express": "^4.15.2",
