@@ -1,7 +1,7 @@
 const { EventEmitter } = require('events');
 const udp = require('dgram');
 const osc = require('osc-min');
-const AppListener = require('./AppOSCListener');
+const AppOSCListener = require('./AppOSCListener');
 
 class TidalOSCListener extends AppListener {
     constructor() {
