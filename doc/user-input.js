@@ -98,3 +98,11 @@ sincronizarPin({s:arpy,tipo:tidal,pin:2,gate:400})
 detenerSincro(2)
 detenerSincro(2)
 detenerSincro(4,2)
+
+
+//  __        __   ___  __   __   __               __   ___  __  
+// /__` |  | |__) |__  |__) /  ` /  \ |    |    | |  \ |__  |__) 
+// .__/ \__/ |    |___ |  \ \__, \__/ |___ |___ | |__/ |___ |  \ 
+                                                              
+
+sincronizarPin({instrument:hh,tipo:sc,pin:2,gate:400})
