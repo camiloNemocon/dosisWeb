@@ -5,6 +5,9 @@ sameTime({pin:2,start:2,lapse:4},{pin:4,start:2,lapse:4},{pin:7,start:2,lapse:4}
 
 sameTime({pin:2,start:1,lapse:4},{pin:4,start:2,lapse:4},{pin:7,start:3,lapse:4})
 
+loopArduino
+prender(10)
+
 prender(2,4,7,8)
 
 apagarTodo()
