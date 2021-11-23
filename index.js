@@ -35,7 +35,7 @@ var Servo = five.Servo;
 var led;
 // const TidalListener = require("./osc/osc-listeners/tidal-listener");
 const SinchronicityManager = require('./SinchronicityManager');
-const TidalOSCListener = require('./osc/osc-listeners/tidal-listener');
+const TidalOSCListener = require('./osc/osc-listeners/TidalOSCListener');
 const SuperColliderOSCListener = require('./osc/osc-listeners/SuperColliderOSCListener');
 // const tidalListener = new TidalListener();
 //cronometro del interval
@@ -79,7 +79,8 @@ io.on('connection', function(socket)
 {
   socket.on('chat message', function(msg)
   {
-    console.clear();
+    // console.clear();
+    console.log("===========================================================");
     console.log("msg: ",msg);
     let is_parsing;
     is_parsing = false;
@@ -88,6 +89,7 @@ io.on('connection', function(socket)
 
       messageManager.parse(msg);
       console.log("msg 4 eval : ",msg);
+      
     }else{
 
 
@@ -245,8 +247,7 @@ function apagarServos() {
   }
 }
 if(!is_testing)
-board.on('ready', function () 
-{
+board.on('ready', function (){
  for (let i = 0; i < 13; i++)
  {
     var pin = new five.Pin({ pin: i,mode: 1});
@@ -258,7 +259,13 @@ board.on('ready', function ()
  // messageManager.parse("stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
 //  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
+
+  //tidal
   // messageManager.parse("sincronizarPin({s:arpy,tipo:tidal,pin:4,gate:200})")
+
+  //supercolllider
+  // messageManager.parse("sincronizarPin({instrument:bd,tipo:sc,pin:4,gate:100})")
+  // messageManager.parse("sincronizarPin({instrument:hh,tipo:sc,pin:2,gate:100,servo:sierra})")
   // messageManager.parse("sincronizarPin({instrument:hh,escuchando:[degree,dur,detune],tipo:sc,pin:13,gate:200})")
   // messageManager.parse("sincronizarPin({instrument:bd,escuchando:[degree,dur,detune],tipo:sc,pin:5,gate:200})")
   
@@ -312,11 +319,11 @@ function detenerPAP() {
   }
 }
 function prender(...pinesID) {
-    console.log("pines : ",pinesID);
+    // console.log("pines : ",pinesID);
 
     for (let i = 0; i < pinesID.length; i++)
     {
-        console.log(i);
+        // console.log(i);
         pines[pinesID[i]].high();
     }
 }
@@ -339,11 +346,11 @@ function apagarTodo()
 
 function apagar(...pinesID) 
 {
-    console.log("pines : ",pinesID);
+    // console.log("pines : ",pinesID);
 
     for (let i = 0; i < pinesID.length; i++)
     {
-        console.log(i);
+        // console.log(i);
         pines[pinesID[i]].low();
     }
 }
@@ -530,47 +537,47 @@ function sincronizarPin(userParams) {
   }
   let syncManager = syncedPins[userParams.pin];
   if(syncManager){
-    syncManager.strategy.update(userParams);
+    syncManager.update(userParams);
 
   }else{
     let listenerType
     if(userParams.tipo === "tidal"){
-      if(!tidalOSCListener){
+      if(!tidalOSCListener){// crude Singleton
         tidalOSCListener = new TidalOSCListener()
       }
       listenerType = tidalOSCListener;
       
     }else if(userParams.tipo === 'sc'){
-      if(!scOSCListener){
+      if(!scOSCListener){// crude Singleton
         scOSCListener = new SuperColliderOSCListener()
       }
       listenerType = scOSCListener;
     }
+    // return
     syncManager = new SinchronicityManager(userParams,listenerType);
     // synchStrategy = syncManager.strategy;
     syncManager.on(SinchronicityManager.gateUpEvent,onGateUp)
     // syncManager.on(SinchronicityManager.gateUpEvent,prender)
-    syncManager.on(SinchronicityManager.gateDownEvent,onGateDown)
     // syncManager.on(SinchronicityManager.gateUpEvent,apagar)
     syncedPins[userParams.pin]= syncManager;
   }
   // tidalListener.off(TidalListener.oscReceivedEvent, oscListener)
   // tidalListener.on(TidalListener.oscReceivedEvent, oscListener)
 }
-function onGateUp(pin){
-  console.log('prendiendo pin',pin);prender(pin);
-}
-function onGateDown(pin){
-  console.log('apagando pin',pin);apagar(pin);
+function onGateUp(pin,time){
+  // console.log('prendiendo pin',pin);
+  prender(pin);
+  setTimeout(apagar,time,pin);
 }
 
-function detenerSincro(...pines){
-  pines.forEach(pin => {
+function detenerSincro(...pinesDetener){
+  pinesDetener.forEach(pin => {
     console.log('pin: ', pin);
     if(syncedPins[pin]){
       syncedPins[pin].removeListener(SinchronicityManager.gateUpEvent,onGateUp);
-      syncedPins[pin].removeListener(SinchronicityManager.gateDownEvent,onGateDown);
       syncedPins[pin] = null;
+      const _pin = pines[pin];
+      _pin.low();
     }
     
   });

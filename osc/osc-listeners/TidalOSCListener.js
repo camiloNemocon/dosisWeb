@@ -3,7 +3,7 @@ const udp = require('dgram');
 const osc = require('osc-min');
 const AppOSCListener = require('./AppOSCListener');
 
-class TidalOSCListener extends AppListener {
+class TidalOSCListener extends AppOSCListener {
     constructor() {
         console.log('tidal listener constructed')
         super();

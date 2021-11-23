@@ -16,9 +16,12 @@ class SinchronicityManager extends EventEmitter{
                 break;
         }
     }
+    update(userParams){
+        this.strategy.update(userParams);
+    }
 }
 SinchronicityManager.gateUpEvent = 'gateUp-event';
-SinchronicityManager.gateDownEvent = 'gateDown-event';
+SinchronicityManager.triggerAttackEvent = 'gateUp-event';
 /**
  * Base class which encapsulates the algorithm that will sinchronize/match data entered by user in the
  * dosisWeb text editor with the data coming into the dosisWeb server sent by whatever the OSC sender
@@ -36,26 +39,55 @@ class Strategy {
     constructor(syncronization,oscListener) {
         this.syncronization = syncronization;
         this.oscListener = oscListener;
-        this.sound;
         this.userParams = syncronization.userParams;
+        this.isPlaying = false;
     }
     play(){
         this.oscListener.on(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
-
+        this.isPlaying = false;
+        
+        
     }
     stop(){
         this.oscListener.removeListener(AppOSCListener.oscReceivedEvent, this.onOscReceived.bind(this))
+        this.isPlaying = false;
 
     }
     update(userParams){
         this.stop();
         this.userParams=userParams;
+        if(!this.isPlaying){
+            this.play();
+        }
     }
     onOscReceived(oscParams){
-        console.warn('Must override')
+        const isGate = this.userParam.sinc==='puerta';
+        const isServo1 = this.userParam.sinc==='servo';
+
+        if(isGate){
+            this.doGate(oscParams.pinId,oscParams.gateTime);
+        }else if(isServo1){
+            this.doServoMethod1(oscParams.pinId,oscParams.angle,oscParams.time);
+        }
+    }
+    doGate(pinId,gateTime,oscParams){
+        const userInstrument = this.userParams.instrument;
+        const recievedInstrument = oscParams.instrument;
+        const recievedAmp = oscParams.amp;
+        const isInstrument = recievedInstrument === userInstrument
+        const isAmp = recievedAmp > 0;
+        const isGateCondition = isInstrument && isAmp;
+        if(isGateCondition){
+
+            // this.doGate(this.userParams.pin,this.userParams.gate);
+            this.syncronization.emit(SinchronicityManager.gateUpEvent,pinId,gateTime);
+        }
+    }
+    doServoMethod1(pinId,angle,time){
+        this.syncronization.emit(SinchronicityManager.triggerAttackEvent,pinId,angle,time);
+
     }
     stop(){}
-    update(){}
 }
 class TidalSynchronicity extends Strategy {
     constructor(synchronization,oscListener) {
@@ -73,12 +105,8 @@ class TidalSynchronicity extends Strategy {
         const userParams = this.userParams;
         console.log('userParams: ', userParams);
         const tidalCondition = oscParams.s === userParams.s;
-        if(tidalCondition){
-            this.syncronization.emit(SinchronicityManager.gateUpEvent,userParams.pin);
-            setTimeout(()=>{
-                this.syncronization.emit(SinchronicityManager.gateDownEvent,userParams.pin);
-                
-            },userParams.gate)
+        if(tidalCondition && this.userParams.gate){
+            this.doGate(this.userParams.pin,this.userParams.gate,oscParams);
         }
 
     }
@@ -86,25 +114,25 @@ class TidalSynchronicity extends Strategy {
 class SuperColliderSynchronicity extends Strategy {
     constructor(synchronization,oscListener) {
         super(synchronization,oscListener)
-        console.log('synchronization: ', synchronization);
         const userParams = this.userParams;
         console.log('userParams: ---', userParams);
+        //get object keys
+        const keys = Object.keys(userParams);
+        console.log('keys: ', keys);
         this.play()
     }
     onOscReceived(oscParams){
-        console.log('oscParams: onOscReceived ', oscParams);
-        const scCondition = oscParams.instrument === this.userParams.instrument;
-        if(scCondition){
+        const userInstrument = this.userParams.instrument;
+        const recievedInstrument = oscParams.instrument;
+        const recievedAmp = oscParams.amp;
+        const isInstrument = recievedInstrument === userInstrument
+        const isAmp = recievedAmp > 0;
+        const isGateCondition = isInstrument && isAmp;
+        if(isGateCondition && this.userParams.gate){
 
-            this.doGate(this.userParams.pin,this.userParams.gate);
+            this.doGate(this.userParams.pin,this.userParams.gate,oscParams);
         }
 
-    }
-    doGate(pinId,gateTime){
-        this.syncronization.emit(SinchronicityManager.gateUpEvent,pinId);
-        setTimeout(() => {
-          this.syncronization.emit(SinchronicityManager.gateDownEvent,pinId)  
-        }, gateTime);
     }
 }
 module.exports = SinchronicityManager;

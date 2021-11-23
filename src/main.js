@@ -26,6 +26,7 @@ $(function () {
   socket.on('server crashed', function(msg){
     console.log("msg : ",msg);
     $('#messages').prepend($('<li>').text(msg));
+    location.reload()
     // window.scrollTo(0, document.body.scrollHeight);
   });
   // console.log("codigo : ",codigo);

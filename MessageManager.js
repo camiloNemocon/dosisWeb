@@ -19,6 +19,9 @@ class MessageManager extends EventEmitter{
 			// console.log("statement : ",statement);
 			let statementExpression = statement.expression
 			// console.log("statement : ",statement);
+			if(!statementExpression){
+				return
+			}
 			let isCallExpression = statementExpression.type==='CallExpression'
 			// console.log("isCallExpression : ",isCallExpression);
 			let name;
@@ -27,6 +30,9 @@ class MessageManager extends EventEmitter{
 				// console.log("name : ",name);
 			}
 			let argumentos = statementExpression.arguments;
+			if(!argumentos){
+				return
+			}
 			let obj_enviar=[]
 			let objectReconstruction=[]
 			for(let i = 0; i < argumentos.length;i++){
