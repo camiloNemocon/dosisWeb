@@ -19,7 +19,7 @@ messageManager.on('parsed',function(msg,name,thing){
         try{
             io.emit('chat message', msg);
             eval(msg)
-            console.log("msg : parsed",msg);
+            // console.log("msg : parsed",msg);
         }catch(e){
             io.emit('eval error', e.toString());
             console.log("eval error: ",e); 
@@ -37,6 +37,7 @@ var led;
 const SinchronicityManager = require('./SinchronicityManager');
 const TidalOSCListener = require('./osc/osc-listeners/TidalOSCListener');
 const SuperColliderOSCListener = require('./osc/osc-listeners/SuperColliderOSCListener');
+const { triggerAttackEvent } = require('./SinchronicityManager');
 // const tidalListener = new TidalListener();
 //cronometro del interval
 var loopID;
@@ -261,14 +262,25 @@ board.on('ready', function (){
 //  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
 
   //tidal
-  // messageManager.parse("sincronizarPin({s:arpy,tipo:tidal,pin:4,gate:200})")
+  messageManager.parse("sincronizarPin({s:bd,tipo:tidal,pin:4,gate:200})")
 
   //supercolllider
   // messageManager.parse("sincronizarPin({instrument:bd,tipo:sc,pin:4,gate:100})")
   // messageManager.parse("sincronizarPin({instrument:hh,tipo:sc,pin:2,gate:100,servo:sierra})")
+  // messageManager.parse("sincronizarPin({instrument:bd,tipo:sc,pin:2,tiempo:100, sinc:puerta})")
+  // messageManager.parse("sincronizarPin({instrument:bz,tipo:sc,pin:3,angulo:10, sinc:servo1})")
+  // messageManager.parse("sincronizarPin({instrument:hh,tipo:sc,pin:8,tiempo:100, sinc:puerta})")
   // messageManager.parse("sincronizarPin({instrument:hh,escuchando:[degree,dur,detune],tipo:sc,pin:13,gate:200})")
   // messageManager.parse("sincronizarPin({instrument:bd,escuchando:[degree,dur,detune],tipo:sc,pin:5,gate:200})")
-  
+  /*setTimeout(function(){
+    console.log("deteniendo servos");
+    messageManager.parse("detenerSincroServos()")
+    setTimeout(function(){
+      console.log("deteniendo steppers");
+      messageManager.parse("sincronizarPin({instrument:bz,tipo:sc,pin:3,angulo:10, sinc:servo1})")
+    },1000)
+  },3000)
+  */
 });
 var derecha = "derecha";
 var izquierda = "izquierda";
@@ -468,11 +480,11 @@ function sameTime(...PinesData)
 
 http.listen(port, function()
 {
-  console.log('listening on *:' + port);
+  console.log('listening on localhost:' + port);
 });
 process.on('uncaughtException', err => {
   console.error('There was an uncaught error', err)
-  io.emit('server crashed', "The server crashed!!!!!!!!!!!!!--El servidor se jodio");
+  io.emit('server crashed', "The server crashed!!!!!!!!!!!!!--El servidor se jodió");
   process.exit(1) //mandatory (as per the Node.js docs)
 })
 /*
@@ -524,7 +536,13 @@ process.on('uncaughtException', function (err) {
 })
 */
 let syncingThang;
-let syncedPins = {};
+/**
+ * object of SinchronicityManger instances, each item is 
+ * a Synchronicity strategy according to the software 
+ * it is listening to, which in turn has the corresponding osc
+ * listner (listens to each osc event)
+ */
+let sinchronicityMangerArray = {};
 let tidalOSCListener;
 let scOSCListener;
 // sincronizarPin({s:bd,tipo:tidal,pin:4,gate:100})
@@ -535,8 +553,10 @@ function sincronizarPin(userParams) {
     io.emit("Se le olvido el pin, gente!")
     return;
   }
-  let syncManager = syncedPins[userParams.pin];
+  /** @type {!SinchronicityManager}*/
+  let syncManager = sinchronicityMangerArray[userParams.pin];
   if(syncManager){
+    console.log('ya esta sincronizado');
     syncManager.update(userParams);
 
   }else{
@@ -554,31 +574,93 @@ function sincronizarPin(userParams) {
       listenerType = scOSCListener;
     }
     // return
+    // const servo = sinchronicityMangerArray[userParams.pin];
+    // if(servo.custom.isOn){
     syncManager = new SinchronicityManager(userParams,listenerType);
     // synchStrategy = syncManager.strategy;
     syncManager.on(SinchronicityManager.gateUpEvent,onGateUp)
+    syncManager.on(SinchronicityManager.triggerAttackEvent,ontriggerAttack)
+    // console.log('SinchronicityManager.triggerAttackEvent: ', SinchronicityManager.triggerAttackEvent);
     // syncManager.on(SinchronicityManager.gateUpEvent,prender)
     // syncManager.on(SinchronicityManager.gateUpEvent,apagar)
-    syncedPins[userParams.pin]= syncManager;
+    sinchronicityMangerArray[userParams.pin]= syncManager;
   }
   // tidalListener.off(TidalListener.oscReceivedEvent, oscListener)
   // tidalListener.on(TidalListener.oscReceivedEvent, oscListener)
 }
+/**
+ * 
+ * @param {*} pin 
+ * @param {*} time 
+ */
 function onGateUp(pin,time){
   // console.log('prendiendo pin',pin);
   prender(pin);
   setTimeout(apagar,time,pin);
 }
+const j5ServoMotors = {};
+let servoPosition = 90;
+let servoFactor = 1;
+function ontriggerAttack(pin,angulo){
+  // this
+  // console.log('this: ', this);
+  if(!j5ServoMotors[pin]){
+    j5ServoMotors[pin] = new Servo({pin,startAt:90});
+    j5ServoMotors[pin].servoFactor = 1;
+    j5ServoMotors[pin].custom.isOn = true;
+  }
+  /**@type{!Servo} */
+  const servo = j5ServoMotors[pin];
+  // j5ServoMotors[pin].to(servoPosition);
+  let p = servo.position;
+  // console.log('servoPosition: ', servoPosition);
+  servo.to(p + servo.servoFactor * angulo);
+  servoPosition+= servo.servoFactor * angulo;
+  if(servo.position>=170||servo.position<=10){
+    servo.servoFactor *= -1
+  }
+/**
+if(triggerAttackEventCounter>=170||triggerAttackEventCounter<=10){
+  servoDelta *= -1
+}
+
+        servoMotor = new ServoManager({
+            pin,
+            range,
+            tiempo
+        });
+
+    servoMotor.actualizar({estrategia,range});
+    servoMotor.ejecutarInstruccion(configuracion);
+
+   */
+
+}
 
 function detenerSincro(...pinesDetener){
   pinesDetener.forEach(pin => {
     console.log('pin: ', pin);
-    if(syncedPins[pin]){
-      syncedPins[pin].removeListener(SinchronicityManager.gateUpEvent,onGateUp);
-      syncedPins[pin] = null;
+    if(sinchronicityMangerArray[pin]){
+      sinchronicityMangerArray[pin].removeListener(SinchronicityManager.gateUpEvent,onGateUp);
+      sinchronicityMangerArray[pin].removeListener(SinchronicityManager.triggerAttackEvent,ontriggerAttack);
+      sinchronicityMangerArray[pin] = null;
       const _pin = pines[pin];
       _pin.low();
     }
     
+  });
+}
+
+function detenerSincroServos(){
+  Object.keys(j5ServoMotors).forEach(pin => {
+    console.log('pin: ', pin);
+    // j5ServoMotors[pin].to(90);
+    if(!sinchronicityMangerArray[pin]||!sinchronicityMangerArray[pin].removeListener)return;
+    sinchronicityMangerArray[pin].removeListener(SinchronicityManager.triggerAttackEvent,ontriggerAttack);
+    sinchronicityMangerArray[pin] = false;
+    if(j5ServoMotors[pin]){
+      j5ServoMotors[pin].stop();
+      j5ServoMotors[pin].custom.isOn = false;
+    }
   });
 }

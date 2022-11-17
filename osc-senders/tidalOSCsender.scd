@@ -5,7 +5,7 @@ r = OSCFunc({ |msg, time, tidalAddr|
 //	msg = msg ++ ["time", time, "latency", latency];
 	msg.postln;
 	a.sendBundle(latency, msg)
-}, '/play2').fix;
+}, '/dirt/play').fix;
 )
 
 a.disconnect

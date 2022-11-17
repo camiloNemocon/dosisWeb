@@ -6,7 +6,6 @@ class SuperColliderOSCListener extends AppOSCListener {
     constructor() {
         console.log('supercollider listener constructed')
         super();
-        // const udp = dgram.createSocket("udp4");
         const inport = 3333;
         const address = "localhost";
         const sock = udp.createSocket("udp4", msg => {
@@ -26,9 +25,7 @@ class SuperColliderOSCListener extends AppOSCListener {
     }
     processMessage(msg){
         const address = msg.address;
-        // console.log('address: ', address);
         const rawData = msg.args;
-        // console.log('rawData: ', rawData);
         const data = {};
         for (let index = 0; index < rawData.length; index += 2) {
             const evenElement = rawData[index];
@@ -37,11 +34,9 @@ class SuperColliderOSCListener extends AppOSCListener {
             }
             const key = evenElement.value;
             const value = rawData[index + 1].value;
-            // console.log('key: ', key);
             data[key] = value;
         }
         data.address = address;
-        // console.log('data: ', data);
         this.emit(AppOSCListener.oscReceivedEvent, data)
 
     }
