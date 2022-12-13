@@ -10,7 +10,7 @@
     "codemirror": "^5.58.2",
     "escodegen": "^1.14.3",
     "esprima": "^4.0.1",
-    "express": "^4.15.2",
+    "express": "^4.17.3",
     "johnny-five": "^1.5.0",
     "keypress": "^0.2.1",
     "osc-min": "^1.1.2",
