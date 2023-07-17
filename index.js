@@ -8,6 +8,7 @@ var port = process.env.PORT || 3000;
 let ServoManager = require('./ServoManager')
 let StepperManager = require('./StepperManager')
 let MessageManager = require('./MessageManager')
+let DCMotorManager = require('./DCMotor')
 
 // new ServoManager()
 let messageManager = new MessageManager();
@@ -67,6 +68,12 @@ const comConfig = {
 };
 let boardConfig = portFromArguments===-1?nonComConfig:comConfig;
 console.log('boardConfig: ', boardConfig);
+const { Firmata: MockFirmata } = require("mock-firmata");
+const mockFirmata = new MockFirmata();
+const mockConfig = {
+  io:mockFirmata,
+  ...nonComConfig
+}
 if(!is_testing)
 var board = new five.Board(boardConfig);
 
@@ -249,7 +256,7 @@ board.on('ready', function ()
     pin.low();
   }
   console.log("start!!!");
- // messageManager.parse("servo({pin:10,estado:5, start:10, final:170, tiempo:3, pasos:3})")
+//  messageManager.parse("motor({id:1,pins:[7,8,9],forward:255})")
  // messageManager.parse("stepper({pines:[2,3,4,5],tiempo:5,estado:0,circuito:L293D,motor:nema17})")
  // messageManager.parse("stepper({pin:[6,7,8,9],sentido:izquierda,rpm:180})")
 //  messageManager.parse("stepper({pines:[3,4],sentido:horario,rpm:180,vueltas:5,circuito:a4988,motor:nema17,estado:0,pinParar:2,id:1})")
@@ -273,6 +280,7 @@ var horario = "horario";
 var anti = "anti";
 var stepperMotor;
 var sm;
+const stepperPines=[]
 function stepper(configuracion){
     console.log("configuracion 1 : ",configuracion);
     /*
@@ -290,6 +298,10 @@ function stepper(configuracion){
         // pines_servos.push(pin)
         stepperMotor = new StepperManager(configuracion);
         sm = stepperMotor.fiveStepper;
+        const {pins} = configuracion
+        if(pins && Array.isArray(pins)){
+          stepperPines
+        }
         // console.log("sm : ",sm);
         // servos[pin]=servoMotor
     }else{
@@ -508,3 +520,18 @@ process.on('uncaughtException', function (err) {
   console.log('pin pon papaps',err);
 })
 */
+const motorsPins = [];
+const dcMotorManager = new DCMotorManager();
+let dcMotor;
+function motor(args) {
+
+  dcMotorManager.call(args)
+  // new
+}
+function dc(args) {
+
+  dcMotorManager.call(args)
+  // new
+}
+// mockFirmata.emit("connect");
+// mockFirmata.emit("ready");
