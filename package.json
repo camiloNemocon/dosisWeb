@@ -11,8 +11,9 @@
     "escodegen": "^1.14.3",
     "esprima": "^4.0.1",
     "express": "^4.15.2",
-    "johnny-five": "^1.5.0",
+    "johnny-five": "^2.1.0",
     "keypress": "^0.2.1",
+    "mock-firmata": "^0.2.0",
     "osc-min": "^1.1.2",
     "socket.io": "^1.7.3",
     "stack-trace": "0.0.10"
