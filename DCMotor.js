@@ -1,5 +1,6 @@
 //https://johnny-five.io/api/motor/
 const {Motor}=require('johnny-five');
+let stop = true;
 class DCMotor {
   constructor(args) {
     this.ids =[]
@@ -8,7 +9,7 @@ class DCMotor {
   add(motor) {}
   call(args){
     console.log('args: ', args);
-    const {id,pins,forward,reverse}=args;
+    const {id,pins,forward,reverse,stop}=args;
     console.log('reverse: ', reverse);
     console.log('forward: ', forward);
     console.log('id: ', id);
@@ -21,10 +22,19 @@ class DCMotor {
     const motor=this.motors[id]
     if(forward!==undefined){
       console.log('forward: ', forward);
+      if(forward>255){
+        forward=255
+      }
       motor.forward(forward)
     }
     if(reverse!==undefined){
+      if(reverse>255){
+        reverse=255
+      }
       motor.reverse(reverse)
+    }
+    if(stop){
+      motor.stop()
     }
   // console.log("id: ", id);
   // console.log("motor.pins: ", pins);
