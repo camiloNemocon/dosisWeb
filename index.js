@@ -68,12 +68,14 @@ const comConfig = {
 };
 let boardConfig = portFromArguments===-1?nonComConfig:comConfig;
 console.log('boardConfig: ', boardConfig);
+/*
 const { Firmata: MockFirmata } = require("mock-firmata");
 const mockFirmata = new MockFirmata();
 const mockConfig = {
   io:mockFirmata,
   ...nonComConfig
 }
+*/
 if(!is_testing)
 var board = new five.Board(boardConfig);
 
