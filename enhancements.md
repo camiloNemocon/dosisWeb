@@ -86,7 +86,9 @@ Thanks to
 
 ![successfull j5 chorme serial](./doc/successfull-j5-chorme-serial.jpg)
 
-## Haven't been able to make it work.
+## ~~Haven't been able to make it work.~~
+
+> The problem was the version of node I was trying to run the project in. I was able to run it in node 16 or 14
 
 When installing the key transport library, the required compilation using `node-gyp` won't succeed. The transport library is a [branch (called **chrome-serial**)](https://github.com/monteslu/avrgirl-arduino/tree/chrome-serial) (`github:monteslu/avrgirl-arduino#chrome-serial`) in monteslu's fork of [avrgirl-arduino](https://github.com/noopkat/avrgirl-arduino) from _@noopkat_ aka _avrgirl_ aka _Suzanne Hinton_.
 
