@@ -92,7 +92,13 @@ When installing the key transport library, the required compilation using `node-
 
 **Consider:** Use Canary (chrome 77) and enable Experimental Web Platform features in chrome://flags
 
+### twitter
+
 There's people how've been able to use as shown in this [twitter thread](https://twitter.com/monteslu/status/1163966447623688193)
+
+#### more twitter
+
+> also should have mentioned that this was also much easier thanks the the work @rwaldron did last year to decouple the firmata protocol from node-serialport and to make the transport pluggable
 
 ## Merge
 
